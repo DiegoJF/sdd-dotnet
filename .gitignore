@@ -1,0 +1,160 @@
+
+# ==========================================
+# .NET / C#
+# ==========================================
+
+# Compilación
+[Bb]in/
+[Oo]bj/
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Aa]rm/
+[Aa]rm64/
+[Aa]ny[Cc]pu/
+out/
+[Ll]og/
+[Ll]ogs/
+
+# Archivos generados
+*.dll
+*.exe
+*.pdb
+*.cache
+*.ilk
+*.obj
+*.pch
+*.resources
+*.tmp_proj
+*.log
+*.tlog/
+*.lastbuildstate
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# ==========================================
+# Visual Studio
+# ==========================================
+
+.vs/
+*.rsuser
+*.sln.ide
+
+# ==========================================
+# NuGet
+# ==========================================
+
+*.nupkg
+*.snupkg
+packages/
+!packages/build/
+.nuget/packages/
+
+# Si utilizas un repositorio local de paquetes NuGet,
+# descomenta esta línea solo si quieres excluirlo:
+# **/NuGets/LocalRepo/
+
+# ==========================================
+# .NET SDK / herramientas
+# ==========================================
+
+artifacts/
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+BenchmarkDotNet.Artifacts/
+
+# ==========================================
+# Tests / cobertura
+# ==========================================
+
+coverage/
+coverage.*
+*.coverage
+*.coveragexml
+TestResults/
+
+# ==========================================
+# ASP.NET Core
+# ==========================================
+
+wwwroot/lib/
+appsettings.*.local.json
+
+# No excluir appsettings.Development.json automáticamente:
+# puede contener configuración necesaria para el equipo.
+
+# ==========================================
+# Secretos y credenciales
+# ==========================================
+
+.env
+.env.*
+!.env.example
+secrets.json
+*.pfx
+*.p12
+*.key
+*.pem
+
+# ==========================================
+# Logs y bases de datos locales
+# ==========================================
+
+*.log.*
+*.db
+*.sqlite
+*.sqlite3
+
+# ==========================================
+# Node.js (si hay frontend integrado)
+# ==========================================
+
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# ==========================================
+# Angular / Nx (si aplica)
+# ==========================================
+
+.angular/
+.nx/cache/
+dist/
+coverage/
+
+# ==========================================
+# Sistema operativo
+# ==========================================
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+Desktop.ini
+$RECYCLE.BIN/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# ==========================================
+# Editores adicionales
+# ==========================================
+
+.vscode/
+.idea/
+
+# ==========================================
+# Archivos temporales
+# ==========================================
+
+*.bak
+*.old
+*.orig
+*.swp
+*.swo
+*~
