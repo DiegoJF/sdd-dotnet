@@ -1,0 +1,38 @@
+schema_version: "1.0"
+
+extension:
+  id: spec-status
+  name: "Ciclo de estado de specs"
+  version: "1.0.0"
+  description: "Aplica y valida las transiciones de estado de las specs del proyecto Realtor"
+  author: "Proyecto Realtor"
+  license: "Propietaria"
+
+requires:
+  speckit_version: ">=0.11.0"
+
+provides:
+  commands:
+    - name: speckit.spec-status.approve
+      file: commands/speckit.spec-status.approve.md
+      description: "Registrar la aprobación explícita de una spec revisada"
+    - name: speckit.spec-status.begin
+      file: commands/speckit.spec-status.begin.md
+      description: "Iniciar automáticamente la implementación de una spec aprobada"
+    - name: speckit.spec-status.complete
+      file: commands/speckit.spec-status.complete.md
+      description: "Validar tareas y evidencia antes de declarar una spec implementada"
+
+hooks:
+  before_implement:
+    command: speckit.spec-status.begin
+    optional: false
+    description: "Transicionar la spec activa a En implementación"
+  after_implement:
+    command: speckit.spec-status.complete
+    optional: false
+    description: "Validar requisitos de cierre y transicionar a Implementada"
+
+tags:
+  - "gobernanza"
+  - "spec-status"

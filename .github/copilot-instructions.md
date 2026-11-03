@@ -1,6 +1,8 @@
 <!-- SPECKIT START -->
-For additional context about technologies to be used, project structure,
-shell commands, and other important information, read the current plan
+
+Para obtener contexto adicional sobre tecnologías, estructura del proyecto,
+comandos y decisiones técnicas, consulta `specs/001-realtor-solution-foundation/plan.md`.
+
 <!-- SPECKIT END -->
 
 # Instrucciones globales del proyecto
@@ -46,11 +48,13 @@ Las specs aprobadas ubicadas en `specs/` son la única fuente de verdad del proy
 
 Está prohibido implementar funcionalidad que no esté descrita en el `spec.md` vigente.
 
-Cada iniciativa DEBE contener exactamente tres archivos:
+Cada iniciativa DEBE contener exactamente tres artefactos de diseño:
 
 - `spec.md`
 - `plan.md`
 - `tasks.md`
+
+Se permite además `quickstart.md` solo como evidencia de validación ejecutada durante la implementación. No se permiten otros artefactos auxiliares en la carpeta de la iniciativa.
 
 El flujo obligatorio mínimo es:
 
@@ -177,6 +181,8 @@ Antes de escribir código:
 6. Implementar únicamente el alcance descrito.
 7. Marcar la tarea como `[X]` solo cuando esté completada y verificada.
 
+El campo `**Estado**` de cada spec DEBE seguir el ciclo `Borrador` -> `Aprobada` -> `En implementación` -> `Implementada`. La aprobación explícita se registra con `/speckit.spec-status.approve`; `/speckit.implement` cambia automáticamente el estado al iniciar y solo lo cambia a `Implementada` al terminar si todas las tareas están completas y `quickstart.md` contiene evidencia satisfactoria de validación. Si falla una condición, el estado permanece `En implementación` y se informa el bloqueo concreto. No se permite editar estados manualmente ni saltar transiciones.
+
 ## Prohibiciones generales
 
 Está prohibido:
@@ -193,4 +199,3 @@ Está prohibido:
 - Configurar entidades EF Core inline en `OnModelCreating`.
 - Crear migraciones sin tarea en `tasks.md`.
 - Crear una migración por cada entidad cuando pertenecen a la misma spec.
-

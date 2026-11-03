@@ -14,6 +14,22 @@
       },
       "registered_skills": [],
       "installed_at": "2026-06-19T10:48:32.488802+00:00"
+    },
+    "spec-status": {
+      "version": "1.0.0",
+      "source": "local",
+      "manifest_hash": "sha256:644a1cd819157f27486f5c2e5ebaa7851a609a2c6fcabed8c31607bb2c3ed0fc",
+      "enabled": true,
+      "priority": 5,
+      "registered_commands": {
+        "copilot": [
+          "speckit.spec-status.approve",
+          "speckit.spec-status.begin",
+          "speckit.spec-status.complete"
+        ]
+      },
+      "registered_skills": [],
+      "installed_at": "2026-11-03T00:00:00+00:00"
     }
   }
 }

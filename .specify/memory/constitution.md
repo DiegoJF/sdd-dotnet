@@ -1,27 +1,16 @@
 <!--
 Sync Impact Report
-- Version change: template-unset -> 1.0.0
-- Modified principles:
-	- Principle slot 1 -> I. Solucion Fullstack Unica
-	- Principle slot 2 -> II. Spec-Driven Development No Negociable
-	- Principle slot 3 -> III. Arquitectura Canonica de Backend y Frontend
-	- Principle slot 4 -> IV. Persistencia Evolutiva y Contratos Estables
-	- Principle slot 5 -> V. Calidad, Trazabilidad y Disciplina de Entrega
-- Added sections:
-	- Restricciones Operativas
-	- Flujo de Trabajo y Validaciones
-- Removed sections:
-	- Ninguna
-- Templates requiring updates:
-	- ✅ reviewed without changes: .specify/templates/plan-template.md
-	- ✅ reviewed without changes: .specify/templates/spec-template.md
-	- ✅ reviewed without changes: .specify/templates/tasks-template.md
-	- ⚠ pending manual review: .specify/templates/commands/*.md (directory not present)
-- Runtime guidance reviewed:
-	- ✅ reviewed without changes: .github/agents/speckit.constitution.agent.md
-	- ✅ reviewed without changes: .specify/extensions/agent-context/README.md
-- Follow-up TODOs:
-	- Ninguno
+- Cambio de versión: 1.0.0 -> 1.1.0 (MINOR: nueva política obligatoria de ciclo de estados).
+- Principios modificados: ninguno.
+- Secciones añadidas: Ciclo de estado de specs; excepción limitada para quickstart.md como evidencia de implementación.
+- Secciones eliminadas: ninguna.
+- Plantillas actualizadas: ✅ .specify/templates/spec-template.md; ✅ .specify/templates/plan-template.md; ✅ .specify/templates/tasks-template.md.
+- Agentes actualizados: ✅ .github/agents/speckit.plan.agent.md; ✅ .github/agents/speckit.implement.agent.md.
+- Flujo y hooks actualizados: ✅ .specify/extensions.yml; ✅ .specify/extensions/.registry; ✅ support/scripts/spec-status.ps1.
+- Comandos locales de estado: ✅ aprobación; ✅ inicio de implementación; ✅ cierre condicionado en .github/agents/ y .specify/extensions/spec-status/.
+- Guía de ejecución actualizada: ✅ .github/copilot-instructions.md.
+- Revisión manual pendiente: ninguna.
+- TODO diferidos: ninguno.
 -->
 
 # Constitución del Proyecto Realtor
@@ -29,6 +18,7 @@ Sync Impact Report
 ## Principios Fundamentales
 
 ### I. Solución Única y Compartida
+
 Esta solución es una y no puede dividirse. Frontend, backend, dominio y persistencia evolucionan dentro del mismo sistema.
 
 Toda iniciativa en specs DEBE contribuir a esta solución compartida, independientemente de si pertenece a la capa frontend o backend.
@@ -36,6 +26,7 @@ Toda iniciativa en specs DEBE contribuir a esta solución compartida, independie
 No se permiten soluciones paralelas, bifurcaciones de arquitectura ni estructuras separadas por tipo de capa.
 
 ### II. Spec-Driven Development (No Negociable)
+
 Las specs aprobadas en specs, carpeta ubicada en la raíz del repositorio, son la única fuente de verdad del proyecto.
 
 No se DEBE implementar ninguna funcionalidad que no esté descrita en el spec vigente.
@@ -49,6 +40,7 @@ speckit.specify -> speckit.clarify -> speckit.plan -> speckit.analyze -> speckit
 Ninguna fase obligatoria puede saltarse.
 
 ### III. Arquitectura Canónica de Backend y Frontend
+
 El backend DEBE organizarse por features y casos de uso con Vertical Slice Architecture.
 
 Están prohibidos controllers y carpetas técnicas globales genéricas para orquestar el dominio.
@@ -58,6 +50,7 @@ Program solo configura servicios, middleware, registro de infraestructura y mape
 El frontend DEBE implementarse con Blazor Web App y Razor Components.
 
 ### IV. Stack Tecnológico Obligatorio
+
 El stack no es negociable y DEBE aplicarse sin excepción:
 
 - SDK: .NET 11.
@@ -70,6 +63,7 @@ El stack no es negociable y DEBE aplicarse sin excepción:
 - Íconos: Lucide Icons como sistema principal.
 
 ### V. Calidad de Dominio y Contratos
+
 La lógica de negocio no DEBE residir en componentes UI, endpoints ni DbContext.
 
 Las entidades de dominio no DEBEN mezclarse con requests o responses.
@@ -81,6 +75,7 @@ DEBE existir logging estructurado.
 Solo se permiten unit tests, salvo que una spec aprobada justifique explícitamente otro tipo de prueba en plan y tasks.
 
 ### VI. Idioma y Documentación
+
 Todo contenido markdown propio del repositorio DEBE estar escrito en español.
 
 Se permiten nombres técnicos, APIs, comandos, namespaces y paquetes en inglés cuando corresponda.
@@ -88,6 +83,7 @@ Se permiten nombres técnicos, APIs, comandos, namespaces y paquetes en inglés 
 Está prohibido mezclar idiomas dentro de un mismo documento.
 
 ### VII. Gobernanza y Divergencias
+
 Esta constitución prevalece sobre cualquier preferencia personal o convención no normativa.
 
 Si existe divergencia entre convenciones locales y comportamiento operativo upstream de spec-kit, el agente DEBE detenerse, reportar el conflicto y esperar instrucción humana explícita.
@@ -112,11 +108,13 @@ La carpeta .specify se reserva para infraestructura operativa de spec-kit.
 
 ## Método de Trabajo
 
-Cada iniciativa DEBE contener exactamente tres archivos:
+Cada iniciativa DEBE contener exactamente tres artefactos de diseño:
 
 - spec.md
 - plan.md
 - tasks.md
+
+Se permite un único archivo adicional, `quickstart.md`, exclusivamente como registro de evidencia de validación generado durante la implementación. No puede contener diseño alternativo ni sustituir información de `spec.md`, `plan.md` o `tasks.md`. Ningún otro artefacto auxiliar está permitido en la carpeta de la iniciativa.
 
 Antes de implementar:
 
@@ -127,6 +125,27 @@ Antes de implementar:
 5. Implementar solo alcance aprobado.
 6. Verificar resultado.
 7. Marcar tarea como X solo tras verificación.
+
+### Ciclo de estado de specs
+
+Cada `spec.md` DEBE contener exactamente un campo `**Estado**` con uno de estos valores:
+
+- `Borrador`: estado inicial asignado al crear la spec.
+- `Aprobada`: la revisión de la spec fue aprobada explícitamente por una persona.
+- `En implementación`: la ejecución de implementación ha comenzado.
+- `Implementada`: todas las tareas están completas y existe evidencia satisfactoria en `quickstart.md`.
+
+Las únicas transiciones permitidas son, en este orden:
+
+1. `Borrador` -> `Aprobada`, mediante el comando `/speckit.spec-status.approve` después de la aprobación explícita de la revisión.
+2. `Aprobada` -> `En implementación`, automáticamente al iniciar `/speckit.implement`.
+3. `En implementación` -> `Implementada`, automáticamente al finalizar `/speckit.implement`, solo cuando se cumplen todas las condiciones de cierre.
+
+Está prohibido saltar, invertir o asignar manualmente estados. Las transiciones DEBEN ejecutarse mediante el flujo y los comandos de estado; las operaciones repetidas en el mismo estado son idempotentes.
+
+Una spec NO DEBE pasar a `Implementada` si `tasks.md` contiene al menos una tarea sin completar, si no existe `quickstart.md`, o si ese archivo no contiene evidencia de validación ejecutada con resultado satisfactorio. La evidencia DEBE identificar los comandos o escenarios ejecutados y sus resultados; una lista de comandos planeados no cuenta como evidencia.
+
+Si una condición de cierre falla, el estado DEBE permanecer `En implementación`. El flujo DEBE informar cada causa concreta y no puede declarar la iniciativa completada.
 
 Reglas de secuencia obligatorias:
 
@@ -156,7 +175,7 @@ Pregunta [N de TOTAL] - [tema corto]
 Por qué importa: [1 línea sobre el impacto de decidir mal]
 
 A) [opción concreta con valor específico]  
-B) [opción concreta con valor específico]  Recomendado  
+B) [opción concreta con valor específico] Recomendado  
 C) [opción concreta con valor específico]  
 D) Otro - escribe tu respuesta
 
@@ -169,7 +188,7 @@ Pregunta [N de TOTAL] - [tema corto]
 
 Por qué importa: [1 línea]
 
-S) Sí  Recomendado  
+S) Sí Recomendado  
 N) No
 
 Responde S o N.
@@ -233,6 +252,4 @@ Está prohibido al agente mover archivos por iniciativa propia, renombrar carpet
 
 La única resolución legítima es la decisión humana documentada vía enmienda constitucional o ajuste explícito de convención local.
 
-
-
-**Version**: 1.0.0 | **Ratified**: 2026-07-04 | **Last Amended**: 2026-07-04
+**Version**: 1.1.0 | **Ratified**: 2026-07-04 | **Last Amended**: 2026-11-03

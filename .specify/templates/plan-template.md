@@ -1,113 +1,79 @@
-# Implementation Plan: [FEATURE]
+# Plan de Implementación: [NOMBRE DE LA FUNCIONALIDAD]
 
-**Branch**: `[###-feature-name]` | **Date**: [DATE] | **Spec**: [link]
+**Rama**: `[###-nombre-de-la-funcionalidad]` | **Fecha**: [FECHA] | **Especificación**: [spec.md](./spec.md)
 
-**Input**: Feature specification from `/specs/[###-feature-name]/spec.md`
+**Entrada**: Resumen de `spec.md` y descripción técnica derivada de la investigación.
 
-**Note**: This template is filled in by the `/speckit.plan` command. See `.specify/templates/plan-template.md` for the execution workflow.
+## Resumen
 
-## Summary
+[Requisito principal y enfoque técnico decidido.]
 
-[Extract from feature spec: primary requirement + technical approach from research]
+## Contexto Técnico
 
-## Technical Context
+- **Lenguaje y versión**: [lenguaje y versión o NEEDS CLARIFICATION].
+- **Dependencias principales**: [dependencias aprobadas].
+- **Almacenamiento**: [motor y alcance de persistencia, o no aplica].
+- **Pruebas**: [framework y estrategia aprobada].
+- **Plataforma objetivo**: [plataformas soportadas].
+- **Tipo de proyecto**: [servicio web, aplicación web, biblioteca u otro].
+- **Objetivos de rendimiento**: [métricas o sin objetivos específicos].
+- **Restricciones**: [límites tecnológicos y de alcance].
+- **Alcance**: [magnitud funcional y técnica].
 
-<!--
-  ACTION REQUIRED: Replace the content in this section with the technical details
-  for the project. The structure here is presented in advisory capacity to guide
-  the iteration process.
--->
+## Investigación y Decisiones
 
-**Language/Version**: [e.g., Python 3.11, Swift 5.9, Rust 1.75 or NEEDS CLARIFICATION]
+- **Decisión**: [opción elegida].
+- **Justificación**: [razón y evidencia].
+- **Alternativas consideradas**: [opciones descartadas y motivo].
+- **Fuentes**: [documentación consultada, si corresponde].
 
-**Primary Dependencies**: [e.g., FastAPI, UIKit, LLVM or NEEDS CLARIFICATION]
+## Verificación Constitucional
 
-**Storage**: [if applicable, e.g., PostgreSQL, CoreData, files or N/A]
+### Antes del diseño
 
-**Testing**: [e.g., pytest, XCTest, cargo test or NEEDS CLARIFICATION]
+- **Solución única**: [cumple o excepción aprobada].
+- **Spec-Driven Development**: [artefactos canónicos y trazabilidad].
+- **Arquitectura**: [cumplimiento del stack y principios].
+- **Calidad**: [pruebas, validación, logging y errores].
+- **Idioma**: [documentación en español].
 
-**Target Platform**: [e.g., Linux server, iOS 15+, WASM or NEEDS CLARIFICATION]
+### Después del diseño
 
-**Project Type**: [e.g., library/cli/web-service/mobile-app/compiler/desktop-app or NEEDS CLARIFICATION]
+[Revalide los gates después de completar el diseño. Toda divergencia debe detenerse y escalarse según la constitución.]
 
-**Performance Goals**: [domain-specific, e.g., 1000 req/s, 10k lines/sec, 60 fps or NEEDS CLARIFICATION]
+## Estructura del Proyecto
 
-**Constraints**: [domain-specific, e.g., <200ms p95, <100MB memory, offline-capable or NEEDS CLARIFICATION]
-
-**Scale/Scope**: [domain-specific, e.g., 10k users, 1M LOC, 50 screens or NEEDS CLARIFICATION]
-
-## Constitution Check
-
-*GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
-
-[Gates determined based on constitution file]
-
-## Project Structure
-
-### Documentation (this feature)
-
-```text
-specs/[###-feature]/
-├── plan.md              # This file (/speckit.plan command output)
-├── research.md          # Phase 0 output (/speckit.plan command)
-├── data-model.md        # Phase 1 output (/speckit.plan command)
-├── quickstart.md        # Phase 1 output (/speckit.plan command)
-├── contracts/           # Phase 1 output (/speckit.plan command)
-└── tasks.md             # Phase 2 output (/speckit.tasks command - NOT created by /speckit.plan)
-```
-
-### Source Code (repository root)
-<!--
-  ACTION REQUIRED: Replace the placeholder tree below with the concrete layout
-  for this feature. Delete unused options and expand the chosen structure with
-  real paths (e.g., apps/admin, packages/something). The delivered plan must
-  not include Option labels.
--->
+La carpeta de la iniciativa conserva estos tres artefactos de diseño:
 
 ```text
-# [REMOVE IF UNUSED] Option 1: Single project (DEFAULT)
-src/
-├── models/
-├── services/
-├── cli/
-└── lib/
-
-tests/
-├── contract/
-├── integration/
-└── unit/
-
-# [REMOVE IF UNUSED] Option 2: Web application (when "frontend" + "backend" detected)
-backend/
-├── src/
-│   ├── models/
-│   ├── services/
-│   └── api/
-└── tests/
-
-frontend/
-├── src/
-│   ├── components/
-│   ├── pages/
-│   └── services/
-└── tests/
-
-# [REMOVE IF UNUSED] Option 3: Mobile + API (when "iOS/Android" detected)
-api/
-└── [same as backend above]
-
-ios/ or android/
-└── [platform-specific structure: feature modules, UI flows, platform tests]
+specs/[###-nombre-de-la-funcionalidad]/
+├── spec.md
+├── plan.md
+└── tasks.md
 ```
 
-**Structure Decision**: [Document the selected structure and reference the real
-directories captured above]
+La única excepción es `quickstart.md`, que se crea durante la implementación exclusivamente como evidencia de validación ejecutada; no se generan `research.md`, `data-model.md`, `contracts/` ni otros documentos auxiliares.
 
-## Complexity Tracking
+```text
+[Árbol de código concreto basado en las rutas aprobadas]
+```
 
-> **Fill ONLY if Constitution Check has violations that must be justified**
+**Decisión de estructura**: [Proyectos, referencias y límites entre módulos.]
 
-| Violation | Why Needed | Simpler Alternative Rejected Because |
-|-----------|------------|-------------------------------------|
-| [e.g., 4th project] | [current need] | [why 3 projects insufficient] |
-| [e.g., Repository pattern] | [specific problem] | [why direct DB access insufficient] |
+## Modelo de Datos
+
+[Entidades, relaciones y reglas, o indicar que esta iniciativa no introduce datos ni entidades.]
+
+## Contratos e Interfaces
+
+[Contratos externos y sus límites, o indicar que no se exponen contratos de producto.]
+
+## Estrategia de Validación
+
+- **Comandos y escenarios**: [validaciones reproducibles y resultados esperados].
+- **Límites de alcance**: [comprobaciones para confirmar que no se introdujeron elementos fuera de spec].
+- La evidencia ejecutada y sus resultados se registran en `quickstart.md` durante `speckit.implement`, no durante la planificación.
+
+## Complejidad
+
+[Registre solo excepciones constitucionales aprobadas, su necesidad y las alternativas más simples descartadas. Si no existen, indique que no hay excepciones.]
