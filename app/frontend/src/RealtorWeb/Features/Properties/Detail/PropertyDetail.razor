@@ -1,5 +1,6 @@
 @using System.Globalization
 @using Lucide.Blazor.Components
+@using RealtorWeb.Features.Properties.Delete
 
 @if (state is PropertyDetailStateType.Loading)
 {
@@ -40,8 +41,19 @@ else if (detail is not null)
                 <Icon Name="arrow-left" Css="icon icon-md" />
                 Volver al listado
             </button>
+            <button type="button" class="btn btn-danger" @onclick="OpenDeleteDialog">
+                <Icon Name="trash-2" Css="icon icon-md" />
+                Eliminar
+            </button>
         </div>
     </section>
+
+    <PropertyDeleteDialog PropertyId="@Id"
+                          PropertyTitle="@detail.Title"
+                          IsOpen="isDeleteDialogOpen"
+                          OnCancel="CloseDeleteDialog"
+                          OnDeleted="HandleDeleted"
+                          OnNotFound="HandleNotFound" />
 
     <article class="card property-detail">
         <div class="property-detail-media">

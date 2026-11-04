@@ -1,0 +1,21 @@
+@using Lucide.Blazor.Components
+
+@if (Notice is not null)
+{
+    <div class="property-notice @(Notice.Kind == PropertyNoticeKind.Success ? "property-notice-success" : "property-notice-info")"
+         role="status">
+        <Icon Name="@(Notice.Kind == PropertyNoticeKind.Success ? "check-circle" : "info")" Css="icon icon-md" />
+        <span class="property-notice-message">@Notice.Message</span>
+        <button type="button" class="btn btn-ghost property-notice-close" aria-label="Cerrar aviso" @onclick="OnDismiss">
+            <Icon Name="x" Css="icon icon-sm" />
+        </button>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public PropertyNotice? Notice { get; set; }
+
+    [Parameter]
+    public EventCallback OnDismiss { get; set; }
+}

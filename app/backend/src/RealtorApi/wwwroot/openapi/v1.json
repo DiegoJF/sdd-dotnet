@@ -228,6 +228,47 @@
             }
           }
         }
+      },
+      "delete": {
+        "tags": [
+          "DeletePropertySlice"
+        ],
+        "operationId": "DeleteProperty",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/api/properties": {
@@ -871,6 +912,9 @@
     },
     {
       "name": "GetPropertyByIdSlice"
+    },
+    {
+      "name": "DeletePropertySlice"
     },
     {
       "name": "ListPropertiesSlice"

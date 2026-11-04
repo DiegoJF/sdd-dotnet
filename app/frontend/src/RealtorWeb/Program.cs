@@ -1,4 +1,5 @@
 using RealtorWeb.Components;
+using RealtorWeb.Features.Properties.Delete;
 using RealtorWeb.Services.Api;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -7,6 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 builder.Services.AddRealtorApiClients(builder.Configuration);
+builder.Services.AddScoped<PropertyNoticeService>();
 
 var app = builder.Build();
 

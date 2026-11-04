@@ -758,3 +758,85 @@ a {
         width: 100%;
     }
 }
+
+/* 017 - Eliminación de propiedades: diálogo de confirmación y avisos */
+.property-delete-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    background: rgb(16 34 61 / 0.45);
+}
+
+.property-delete-dialog {
+    width: 100%;
+    max-width: 28rem;
+    padding: 1.5rem;
+    border-radius: var(--radius-lg);
+    background: var(--color-surface);
+    box-shadow: var(--shadow-md);
+}
+
+.property-delete-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0 0 0.75rem;
+    font-size: 1.125rem;
+    color: var(--color-danger);
+}
+
+.property-delete-text {
+    margin: 0 0 1rem;
+    color: var(--color-text);
+}
+
+.property-delete-error {
+    margin: 0 0 1rem;
+    padding: 0.625rem 0.75rem;
+    border: 1px solid var(--color-danger);
+    border-radius: var(--radius-sm);
+    color: var(--color-danger);
+    background: var(--color-surface-muted);
+}
+
+.property-delete-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+}
+
+.property-notice {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--color-border);
+    border-left-width: 4px;
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
+    box-shadow: var(--shadow-sm);
+}
+
+.property-notice-success {
+    border-left-color: var(--color-success);
+    color: var(--color-success);
+}
+
+.property-notice-info {
+    border-left-color: var(--color-primary);
+    color: var(--color-primary);
+}
+
+.property-notice-message {
+    flex: 1;
+    color: var(--color-text);
+}
+
+.property-notice-close {
+    padding: 0.25rem;
+}

@@ -1,0 +1,35 @@
+@using Lucide.Blazor.Components
+
+@if (IsOpen)
+{
+    <div class="property-delete-backdrop">
+        <div class="card property-delete-dialog"
+             role="alertdialog"
+             aria-modal="true"
+             aria-labelledby="property-delete-title"
+             aria-describedby="property-delete-description">
+            <h2 id="property-delete-title" class="property-delete-title">
+                <Icon Name="alert-triangle" Css="icon icon-md" />
+                Eliminar propiedad
+            </h2>
+            <p id="property-delete-description" class="property-delete-text">
+                ¿Seguro que deseas eliminar <strong>@PropertyTitle</strong>? Esta acción no se puede deshacer.
+            </p>
+
+            @if (errorMessage is not null)
+            {
+                <p class="property-delete-error" role="alert">@errorMessage</p>
+            }
+
+            <div class="property-delete-actions">
+                <button type="button" class="btn btn-secondary" disabled="@isDeleting" @onclick="CancelAsync">
+                    Cancelar
+                </button>
+                <button type="button" class="btn btn-danger" disabled="@isDeleting" @onclick="ConfirmAsync">
+                    <Icon Name="trash-2" Css="icon icon-md" />
+                    @(isDeleting ? "Eliminando..." : "Eliminar")
+                </button>
+            </div>
+        </div>
+    </div>
+}

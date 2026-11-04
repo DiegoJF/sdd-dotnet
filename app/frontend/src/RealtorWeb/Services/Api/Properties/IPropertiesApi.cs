@@ -44,4 +44,9 @@ public interface IPropertiesApi
         [AliasAs("status")] int status,
         [AliasAs("image")] StreamPart? image = null,
         CancellationToken cancellationToken = default);
+
+    [Delete("/api/properties/{id}")]
+    Task DeletePropertyAsync(
+        string id,
+        CancellationToken cancellationToken = default);
 }

@@ -1,3 +1,7 @@
+@using RealtorWeb.Features.Properties.Delete
+
+<PropertyNoticeBanner Notice="currentNotice" OnDismiss="DismissNotice" />
+
 @if (isLoading && response is null)
 {
     <PropertyListState State="PropertyListStateType.Loading" />
@@ -31,7 +35,7 @@ else
     <section class="properties-grid" aria-live="polite">
         @foreach (var property in response.Items)
         {
-            <PropertyCard property="property" />
+            <PropertyCard property="property" OnDeleteRequested="RequestDelete" />
         }
     </section>
 
@@ -40,4 +44,14 @@ else
         <span class="pagination-summary">Pagina @response.Page de @response.TotalPages</span>
         <button class="btn btn-secondary" disabled="@(!CanGoNext)" @onclick="NextAsync">Siguiente</button>
     </section>
+}
+
+@if (pendingDelete is not null)
+{
+    <PropertyDeleteDialog PropertyId="@pendingDelete.Id.ToString()"
+                          PropertyTitle="@pendingDelete.Title"
+                          IsOpen="true"
+                          OnCancel="CancelDelete"
+                          OnDeleted="HandleDeletedAsync"
+                          OnNotFound="HandleNotFoundAsync" />
 }

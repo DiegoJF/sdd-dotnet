@@ -1,6 +1,7 @@
 using System.Net;
 using Microsoft.AspNetCore.Components;
 using Refit;
+using RealtorWeb.Features.Properties.Delete;
 using RealtorWeb.Services.Api.Properties;
 
 namespace RealtorWeb.Features.Properties.Detail;
@@ -91,6 +92,27 @@ public partial class PropertyDetail : ComponentBase, IAsyncDisposable
     private Task ReloadAsync() => LoadAsync();
 
     private void BackToList() => Navigation.NavigateTo("/");
+
+    [Inject] private PropertyNoticeService NoticeService { get; set; } = default!;
+
+    private bool isDeleteDialogOpen;
+
+    private void OpenDeleteDialog() => isDeleteDialogOpen = true;
+
+    private void CloseDeleteDialog() => isDeleteDialogOpen = false;
+
+    // Tras eliminar desde el detalle se navega al listado con el aviso (RF-11).
+    private void HandleDeleted() => CompleteDelete(PropertyNotice.Deleted());
+
+    // 404 al confirmar: la propiedad ya no existe (RF-16).
+    private void HandleNotFound() => CompleteDelete(PropertyNotice.NotFound());
+
+    private void CompleteDelete(PropertyNotice notice)
+    {
+        isDeleteDialogOpen = false;
+        NoticeService.Set(notice);
+        Navigation.NavigateTo("/");
+    }
 
     public async ValueTask DisposeAsync()
     {

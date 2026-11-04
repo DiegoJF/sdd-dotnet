@@ -1,0 +1,52 @@
+openapi: 3.1.0
+info:
+  title: Realtor API - DeleteProperty
+  version: v1
+paths:
+  /api/properties/{id}:
+    delete:
+      operationId: DeleteProperty
+      summary: Elimina definitivamente una propiedad por su identificador.
+      security: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: UUID canónico de la propiedad.
+      responses:
+        '204':
+          description: Propiedad eliminada.
+        '400':
+          description: Identificador con formato inválido.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/HttpValidationProblemDetails'
+        '404':
+          description: No existe una propiedad con el identificador (o ya fue eliminada).
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+components:
+  schemas:
+    ProblemDetails:
+      type: object
+      properties:
+        type: { type: string, nullable: true }
+        title: { type: string, nullable: true }
+        status: { type: integer, nullable: true }
+        detail: { type: string, nullable: true }
+        instance: { type: string, nullable: true }
+    HttpValidationProblemDetails:
+      allOf:
+        - $ref: '#/components/schemas/ProblemDetails'
+        - type: object
+          properties:
+            errors:
+              type: object
+              additionalProperties:
+                type: array
+                items: { type: string }
