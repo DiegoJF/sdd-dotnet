@@ -5,10 +5,8 @@
         @if (_state is PropertyUpdateStateType.LoadingInitialData)
         {
             <PropertyUpdateState State="PropertyUpdateStateType.LoadingInitialData" Message="@_statusMessage" />
-            return;
         }
-
-        @if (_state is PropertyUpdateStateType.LoadFailed)
+        else if (_state is PropertyUpdateStateType.LoadFailed)
         {
             <PropertyUpdateState State="PropertyUpdateStateType.LoadFailed" Message="@_statusMessage">
                 <Actions>
@@ -16,9 +14,9 @@
                     <button type="button" class="btn btn-secondary" @onclick="BackToList">Volver al listado</button>
                 </Actions>
             </PropertyUpdateState>
-            return;
         }
-
+        else
+        {
         @if (_state is PropertyUpdateStateType.Submitting or PropertyUpdateStateType.SubmitSucceeded or PropertyUpdateStateType.SubmitFailed)
         {
             <PropertyUpdateState State="@_state" Message="@_statusMessage">
@@ -137,5 +135,6 @@
                 </button>
             </div>
         </EditForm>
+        }
     </div>
 </article>
