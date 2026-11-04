@@ -1,0 +1,169 @@
+openapi: 3.0.3
+info:
+  title: Realtor API - Actualizacion de Propiedades
+  version: 0.1.0
+  description: >-
+    Contrato publico del endpoint de actualizacion de propiedades con imagen opcional.
+    Incluye busqueda previa por id, validaciones de campos de negocio, validaciones de
+    formato/tamano de imagen y errores esperados.
+servers:
+  - url: http://localhost:5023
+paths:
+  /api/properties/{id}:
+    put:
+      operationId: updateProperty
+      summary: Actualiza una propiedad existente con imagen opcional
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: Identificador unico de la propiedad a actualizar.
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UpdatePropertyRequest'
+      responses:
+        '200':
+          description: Propiedad actualizada exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdatePropertyResponse'
+              examples:
+                withoutImage:
+                  summary: Actualizacion exitosa sin imagen (imageUrl previo conservado)
+                  value:
+                    id: a1f0e2d4-7c81-4d12-9e61-0b7f0b1a1001
+                    title: Casa Coral Way con jardin renovado
+                    status: Available
+                    imageUrl: /assets/properties/6c6bb3e7-4cf1-44e0-a3cf-f529f5a0be7a.jpg
+                withImage:
+                  summary: Actualizacion exitosa con nueva imagen
+                  value:
+                    id: b2f0e2d4-7c81-4d12-9e61-0b7f0b1a2002
+                    title: Loft Brickell con vista al rio actualizado
+                    status: Rented
+                    imageUrl: /assets/properties/9d9aa5f1-2ef4-4a01-b7ce-d830f6b0cf1b.jpg
+                withNullImageUrl:
+                  summary: Actualizacion exitosa sin imagen y con imageUrl previo null
+                  value:
+                    id: c3f0e2d4-7c81-4d12-9e61-0b7f0b1a3003
+                    title: Apartamento Miami Beach actualizado
+                    status: Maintenance
+                    imageUrl: null
+        '400':
+          description: Campos de negocio invalidos, incompletos u omitidos
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '404':
+          description: Propiedad no encontrada para el id proporcionado
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+              examples:
+                notFound:
+                  summary: Propiedad inexistente
+                  value:
+                    type: https://tools.ietf.org/html/rfc7231#section-6.5.4
+                    title: Propiedad no encontrada.
+                    status: 404
+                    detail: No existe una propiedad con el id proporcionado.
+        '413':
+          description: Imagen mayor al tamano maximo permitido (5 MB)
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '415':
+          description: Formato de imagen no permitido, archivo vacio o contenido real invalido
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '500':
+          description: Error interno al guardar la imagen
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+components:
+  schemas:
+    UpdatePropertyRequest:
+      type: object
+      required:
+        - title
+        - description
+        - address
+        - price
+        - status
+      properties:
+        title:
+          type: string
+          minLength: 1
+          maxLength: 160
+        description:
+          type: string
+          minLength: 1
+          maxLength: 1200
+        address:
+          type: string
+          minLength: 1
+          maxLength: 240
+        price:
+          type: number
+          format: decimal
+          minimum: 0
+        status:
+          type: string
+          enum:
+            - Available
+            - Rented
+            - Maintenance
+          description: Valor del catalogo de estados. Insensible a mayusculas/minusculas.
+        image:
+          type: string
+          format: binary
+          description: Archivo opcional PNG o JPG de tamano maximo 5 MB. Si se omite, imageUrl previo se conserva.
+    UpdatePropertyResponse:
+      type: object
+      required:
+        - id
+        - title
+        - status
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        status:
+          type: string
+        imageUrl:
+          type: string
+          nullable: true
+          description: URL publica/relativa de la imagen. Null si la propiedad no tiene imagen asociada.
+    ProblemDetails:
+      type: object
+      properties:
+        type:
+          type: string
+        title:
+          type: string
+        status:
+          type: integer
+        detail:
+          type: string
+        errors:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: string

@@ -1,0 +1,51 @@
+@if (State is PropertyUpdateStateType.LoadingInitialData)
+{
+    <section class="state-loading property-state" role="status" aria-live="polite">
+        <strong>Cargando inmueble</strong>
+        <p>@(Message ?? "Recuperando datos actuales para edición...")</p>
+    </section>
+}
+else if (State is PropertyUpdateStateType.Submitting)
+{
+    <section class="state-loading property-state" role="status" aria-live="polite">
+        <strong>Guardando cambios</strong>
+        <p>@(Message ?? "Enviando actualización de inmueble...")</p>
+    </section>
+}
+else if (State is PropertyUpdateStateType.SubmitSucceeded)
+{
+    <section class="state-success property-state" role="status" aria-live="polite">
+        <strong>Actualización completada</strong>
+        <p>@(Message ?? "La propiedad se actualizó correctamente.")</p>
+        @if (Actions is not null)
+        {
+            <div class="property-state-actions">
+                @Actions
+            </div>
+        }
+    </section>
+}
+else if (State is PropertyUpdateStateType.LoadFailed or PropertyUpdateStateType.SubmitFailed)
+{
+    <section class="state-error property-state" role="alert" aria-live="assertive">
+        <strong>No fue posible completar la operación</strong>
+        <p>@(Message ?? "Intenta nuevamente.")</p>
+        @if (Actions is not null)
+        {
+            <div class="property-state-actions">
+                @Actions
+            </div>
+        }
+    </section>
+}
+
+@code {
+    [Parameter]
+    public PropertyUpdateStateType State { get; set; } = PropertyUpdateStateType.Editing;
+
+    [Parameter]
+    public string? Message { get; set; }
+
+    [Parameter]
+    public RenderFragment? Actions { get; set; }
+}

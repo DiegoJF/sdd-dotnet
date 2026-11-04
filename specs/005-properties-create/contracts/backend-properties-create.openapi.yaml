@@ -1,0 +1,139 @@
+openapi: 3.0.3
+info:
+  title: Realtor API - Alta de Propiedades
+  version: 0.1.0
+  description: >-
+    Contrato publico del endpoint de creacion de propiedades con imagen opcional,
+    incluyendo validaciones de formato/tamano y errores esperados.
+servers:
+  - url: http://localhost:5023
+paths:
+  /api/properties:
+    post:
+      operationId: createProperty
+      summary: Crea una nueva propiedad con imagen opcional
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CreatePropertyRequest'
+      responses:
+        '201':
+          description: Propiedad creada exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreatePropertyResponse'
+              examples:
+                withoutImage:
+                  summary: Alta exitosa sin imagen
+                  value:
+                    id: a1f0e2d4-7c81-4d12-9e61-0b7f0b1a1001
+                    title: Casa Coral Way con jardin tropical
+                    status: Available
+                    imageUrl: null
+                withImage:
+                  summary: Alta exitosa con imagen
+                  value:
+                    id: b2f0e2d4-7c81-4d12-9e61-0b7f0b1a2002
+                    title: Loft Brickell con vista al rio
+                    status: Available
+                    imageUrl: /assets/properties/6c6bb3e7-4cf1-44e0-a3cf-f529f5a0be7a.jpg
+        '413':
+          description: Imagen mayor al tamano maximo permitido (5 MB)
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '400':
+          description: Campos de negocio invalidos o incompletos
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '415':
+          description: Formato de imagen no permitido, archivo vacio o contenido real invalido
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '500':
+          description: Error interno al guardar la imagen
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+components:
+  schemas:
+    CreatePropertyRequest:
+      type: object
+      required:
+        - title
+        - description
+        - address
+        - price
+        - status
+        - bedroomCount
+        - bathroomCount
+        - areaSquareMeters
+      properties:
+        title:
+          type: string
+          minLength: 1
+        description:
+          type: string
+          minLength: 1
+        address:
+          type: string
+          minLength: 1
+        price:
+          type: number
+          format: decimal
+        status:
+          type: string
+        bedroomCount:
+          type: integer
+          minimum: 0
+        bathroomCount:
+          type: integer
+          minimum: 0
+        areaSquareMeters:
+          type: number
+          format: decimal
+        image:
+          type: string
+          format: binary
+          description: Archivo opcional PNG o JPG de tamano maximo 5 MB.
+    CreatePropertyResponse:
+      type: object
+      required:
+        - id
+        - title
+        - status
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        status:
+          type: string
+        imageUrl:
+          type: string
+          nullable: true
+          description: URL publica/relativa persistida de la imagen, o null si no hay imagen.
+    ProblemDetails:
+      type: object
+      properties:
+        type:
+          type: string
+        title:
+          type: string
+        status:
+          type: integer
+          format: int32
+        detail:
+          type: string
+        instance:
+          type: string

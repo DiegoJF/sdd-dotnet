@@ -1,0 +1,146 @@
+openapi: 3.0.3
+info:
+  title: Realtor API - Consulta de Propiedad por Id
+  version: 0.1.0
+  description: >-
+    Contrato publico del endpoint GET /api/properties/{id} para consulta unitaria
+    de propiedades, alineado con los campos de la spec 004 y con exposicion de
+    imageUrl absoluto cuando existe imagen asociada.
+servers:
+  - url: http://localhost:5023
+paths:
+  /api/properties/{id}:
+    get:
+      operationId: getPropertyById
+      summary: Obtiene una propiedad por su identificador
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Identificador canónico de la propiedad (UUID/GUID RFC 4122).
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Propiedad encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PropertyDetailResponse'
+              examples:
+                withImage:
+                  summary: Propiedad con imagen
+                  value:
+                    id: a1f0e2d4-7c81-4d12-9e61-0b7f0b1a1001
+                    title: Casa Coral Way con jardin tropical
+                    description: Casa familiar con espacios amplios y excelente acceso.
+                    address: 2450 SW 22nd St, Miami, FL 33145
+                    price: 4200.0
+                    status: Available
+                    bedroomCount: 3
+                    bathroomCount: 2
+                    areaSquareMeters: 185.5
+                    imageUrl: http://localhost:5023/assets/properties/1.png
+                withoutImage:
+                  summary: Propiedad sin imagen
+                  value:
+                    id: b2f0e2d4-7c81-4d12-9e61-0b7f0b1a2002
+                    title: Apartamento Midtown
+                    description: Departamento luminoso cercano a servicios.
+                    address: 3250 NE 1st Ave, Miami, FL 33137
+                    price: 3100.0
+                    status: Available
+                    bedroomCount: 2
+                    bathroomCount: 1
+                    areaSquareMeters: 92.0
+                    imageUrl: null
+        '400':
+          description: Id de ruta invalido (no UUID)
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+              examples:
+                invalidId:
+                  summary: Formato de id invalido
+                  value:
+                    type: about:blank
+                    title: Solicitud invalida.
+                    status: 400
+                    detail: El parametro id debe tener formato UUID valido.
+        '404':
+          description: Propiedad no encontrada para el id solicitado
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+              examples:
+                notFound:
+                  summary: Recurso inexistente
+                  value:
+                    type: https://tools.ietf.org/html/rfc7231#section-6.5.4
+                    title: Propiedad no encontrada.
+                    status: 404
+                    detail: No existe una propiedad con el id proporcionado.
+components:
+  schemas:
+    PropertyDetailResponse:
+      type: object
+      required:
+        - id
+        - title
+        - description
+        - address
+        - price
+        - status
+        - bedroomCount
+        - bathroomCount
+        - areaSquareMeters
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        description:
+          type: string
+        address:
+          type: string
+        price:
+          type: number
+        status:
+          type: string
+        bedroomCount:
+          type: integer
+          minimum: 0
+        bathroomCount:
+          type: integer
+          minimum: 0
+        areaSquareMeters:
+          type: number
+        imageUrl:
+          type: string
+          format: uri
+          nullable: true
+          description: URL absoluta y publica de la imagen cuando existe; null si no hay imagen.
+    ProblemDetails:
+      type: object
+      properties:
+        type:
+          type: string
+        title:
+          type: string
+        status:
+          type: integer
+          format: int32
+        detail:
+          type: string
+        instance:
+          type: string
+        errors:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: string

@@ -1,0 +1,123 @@
+version: 1
+name: frontend-property-create
+summary: Contrato funcional y visual para la página de alta de inmuebles en RealtorWeb.
+
+route:
+  path: /properties/create
+  purpose: alta-individual-de-inmueble
+
+api_integration:
+  client_name: IPropertiesApi
+  registration: IHttpClientFactory-AddRefitClient
+  base_address_source: RealtorApi
+  endpoint:
+    method: POST
+    path: /api/properties
+    operation_id: CreateProperty
+    request_content_type: multipart/form-data
+  request_schema:
+    name: CreatePropertyRequest
+    required_fields:
+      - title
+      - description
+      - address
+      - price
+      - status
+      - bedroomCount
+      - bathroomCount
+      - areaSquareMeters
+    optional_fields:
+      - image
+  responses:
+    created_201:
+      schema: CreatePropertyResponse
+      ui_effect:
+        - success-confirmation-visible
+        - redirect-to-property-detail
+    validation_400:
+      schema: HttpValidationProblemDetails
+      ui_effect:
+        - field-errors
+        - keep-form-values
+    payload_too_large_413:
+      schema: ProblemDetails
+      ui_effect:
+        - global-error-message
+        - keep-form-values
+    unsupported_media_type_415:
+      schema: ProblemDetails
+      ui_effect:
+        - global-error-message
+        - keep-form-values
+    server_error_500:
+      schema: ProblemDetails
+      ui_effect:
+        - global-error-message
+        - keep-form-values
+  prohibited:
+    - direct-httpclient-in-razor
+    - restservice-for-outside-di-registration
+
+ui_contract:
+  required_fields_visible:
+    - title
+    - description
+    - address
+    - price
+    - status
+    - bedroomCount
+    - bathroomCount
+    - areaSquareMeters
+    - image-optional
+  image_behaviour:
+    optional: true
+    preview_required: true
+    validate_on_select:
+      - file-type
+      - file-size
+    actions:
+      - replace-image
+      - remove-image
+  validation_behaviour:
+    realtime_field_errors: true
+    submit_error_summary: true
+  submit_behaviour:
+    success_redirect_target: /properties/{id}
+    keep_values_on_error: true
+
+screen_states:
+  required_states:
+    - editing
+    - submitting
+    - submit-succeeded
+    - submit-failed
+
+visual_rules:
+  source_of_truth: app/frontend/src/RealtorWeb/wwwroot/app.css
+  required:
+    - reusable-form-state-classes
+    - lucide-icons-only
+  prohibited:
+    - inline-styles-in-razor
+    - external-css-frameworks
+
+scope:
+  included:
+    - alta-individual
+    - validacion-frontend-equivalente-backend
+    - manejo-de-errores-por-familia-de-respuesta
+  out_of_scope:
+    - editar-inmueble
+    - eliminar-inmueble
+    - alta-masiva
+    - multiples-imagenes-por-inmueble
+
+validation:
+  manual_evidence_required:
+    - success-201
+    - validation-400
+    - payload-too-large-413
+    - unsupported-media-type-415
+    - server-error-500
+    - keep-values-on-error
+    - success-redirect-to-detail

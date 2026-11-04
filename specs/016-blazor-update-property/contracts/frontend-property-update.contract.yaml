@@ -1,0 +1,121 @@
+version: 1
+name: frontend-property-update
+summary: Contrato funcional y de integración para edición de inmuebles en RealtorWeb.
+
+route:
+  path: /properties/{id}/edit
+  purpose: edicion-individual-de-inmueble
+  navigation_entry_point:
+    source_component: Features/Properties/List/PropertyCard
+    action: editar-inmueble
+
+api_integration:
+  client_name: IPropertiesApi
+  registration: IHttpClientFactory-AddRefitClient
+  endpoint:
+    method: PUT
+    path: /api/properties/{id}
+    operation_id: UpdateProperty
+    request_content_types:
+      - multipart/form-data
+      - application/x-www-form-urlencoded
+  request_schema:
+    name: UpdatePropertyRequest
+    route_params:
+      - id
+    editable_fields:
+      - title
+      - description
+      - address
+      - price
+      - status
+    optional_fields:
+      - image
+  responses:
+    ok_200:
+      schema: UpdatePropertyResponse
+      ui_effect:
+        - success-confirmation-visible
+        - redirect-to-property-detail
+    validation_400:
+      schema: HttpValidationProblemDetails
+      ui_effect:
+        - field-errors
+        - keep-form-values
+    not_found_404:
+      schema: ProblemDetails
+      ui_effect:
+        - recoverable-error-message
+        - keep-form-values
+    payload_too_large_413:
+      schema: ProblemDetails
+      ui_effect:
+        - global-error-message
+        - keep-form-values
+    unsupported_media_type_415:
+      schema: ProblemDetails
+      ui_effect:
+        - global-error-message
+        - keep-form-values
+    server_error_500:
+      schema: ProblemDetails
+      ui_effect:
+        - global-error-message
+        - keep-form-values
+  prohibited:
+    - direct-httpclient-in-razor
+    - ad-hoc-api-client-outside-di
+
+ui_contract:
+  initialization:
+    load-current-property-before-edit: true
+  validation_behaviour:
+    realtime_field_errors: true
+    prevent_submit_with_errors: true
+  submit_behaviour:
+    prevent_duplicate_requests: true
+    success_redirect_target: /properties/{id}
+    keep_values_on_error: true
+  image_behaviour:
+    replacement_optional: true
+    keep_current_if_not_replaced: true
+
+screen_states:
+  required_states:
+    - loading-initial-data
+    - editing
+    - submitting
+    - submit-succeeded
+    - submit-failed
+
+visual_rules:
+  source_of_truth: app/frontend/src/RealtorWeb/wwwroot/app.css
+  required:
+    - reuse-existing-form-and-feedback-patterns
+    - lucide-icons-only
+  prohibited:
+    - external-css-frameworks
+
+scope:
+  included:
+    - editar-desde-listado
+    - cargar-datos-actuales
+    - guardar-con-update-property
+    - conservar-imagen-si-no-se-reemplaza
+  out_of_scope:
+    - crear-inmueble
+    - eliminar-inmueble
+    - edicion-masiva
+    - concurrencia-optimista
+
+validation:
+  manual_evidence_required:
+    - load-initial-success
+    - success-200-and-redirect
+    - validation-400
+    - not-found-404
+    - payload-too-large-413
+    - unsupported-media-type-415
+    - server-error-500
+    - keep-values-on-error
+    - keep-image-when-no-replacement

@@ -1,0 +1,32 @@
+﻿@using Lucide.Blazor.Components
+
+<script type="module" src="@Assets["Components/Layout/NavMenu.razor.js"]"></script>
+
+<div class="sidebar-brand">
+    <a class="sidebar-brand-link" href="">
+        <Icon Name="building-2" Css="icon icon-lg" />
+        <span>RealtorWeb</span>
+    </a>
+    <button id="sidebar-toggle"
+            class="sidebar-toggle"
+            type="button"
+            aria-label="Alternar navegacion"
+            aria-controls="sidebar-nav"
+            aria-expanded="false">
+        <Icon Name="menu" Css="icon icon-md" />
+    </button>
+</div>
+
+<div id="sidebar-overlay" class="sidebar-overlay" aria-hidden="true"></div>
+
+<nav id="sidebar-nav" class="sidebar-nav" aria-label="Principal" aria-expanded="false">
+    <NavLink class="sidebar-link" ActiveClass="sidebar-link-active" href="" Match="NavLinkMatch.All">
+        <Icon Name="home" Css="icon icon-md" />
+        <span>Inicio</span>
+    </NavLink>
+    <NavLink class="sidebar-link" ActiveClass="sidebar-link-active" href="properties/create" Match="NavLinkMatch.Prefix">
+        <Icon Name="plus-square" Css="icon icon-md" />
+        <span>Alta de inmueble</span>
+    </NavLink>
+</nav>
+

@@ -1,0 +1,92 @@
+version: 1
+name: frontend-properties-list
+summary: Contrato visual y de interacción para la página principal de listado de propiedades en RealtorWeb.
+
+route:
+  path: /
+  component_folder: Components/Pages
+  feature_folder: Features/Properties/List
+  default_query:
+    page: 1
+    page_size: 9
+
+api_integration:
+  client_name: IPropertiesApi
+  registration: IHttpClientFactory-AddRefitClient
+  base_address_source: RealtorApi
+  endpoint:
+    method: GET
+    path: /api/properties
+    required_query:
+      - Page
+      - PageSize
+  response_shape:
+    items: PagedPropertyListResponse.Items
+    pagination:
+      - Page
+      - PageSize
+      - TotalItems
+      - TotalPages
+      - HasNext
+      - HasPrevious
+  prohibited:
+    - direct-httpclient-in-razor
+    - restservice-for-outside-di-registration
+
+ui_shell:
+  required_classes:
+    - page-container
+    - page-header
+    - page-title
+    - page-subtitle
+    - page-actions
+  list_area:
+    grid_class: properties-grid
+    card_class: property-card
+    card_fields:
+      - title
+      - image
+      - price
+      - status
+      - address
+      - bedroomCount
+      - bathroomCount
+      - areaSquareMeters
+
+screen_states:
+  required_states:
+    - loading
+    - empty
+    - error
+    - success
+  implementation: reusable-css-patterns-in-app-css
+
+pagination:
+  controls:
+    - previous
+    - next
+  disabled_when:
+    previous: HasPrevious == false
+    next: HasNext == false
+
+responsive:
+  desktop: 3-columns
+  tablet: 2-columns
+  mobile: 1-column
+  breakpoints:
+    tablet: 1024px
+    mobile: 768px
+
+visual_rules:
+  source_of_truth: wwwroot/app.css
+  prohibited:
+    - inline-styles-in-razor
+    - hardcoded-colors-in-razor-or-cs
+    - external-css-frameworks
+    - non-lucide-icon-systems
+
+validation:
+  compile_required: true
+  ui_states_required: true
+  pagination_controls_required: true
+  responsive_grid_required: true

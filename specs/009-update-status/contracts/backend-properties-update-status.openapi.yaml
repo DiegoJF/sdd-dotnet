@@ -1,0 +1,119 @@
+openapi: 3.0.3
+info:
+  title: Realtor API - Actualización de estado de propiedades
+  version: 0.1.0
+  description: >-
+    Contrato público del endpoint PATCH para actualizar únicamente el estado de una propiedad existente.
+    No incluye imagen ni otros campos editables.
+servers:
+  - url: http://localhost:5023
+paths:
+  /api/properties/{id}/status:
+    patch:
+      operationId: updatePropertyStatus
+      summary: Actualiza únicamente el estado de una propiedad existente
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: Identificador único de la propiedad a actualizar.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdatePropertyStatusRequest'
+            examples:
+              available:
+                summary: Cambio a Available
+                value:
+                  status: Available
+              rented:
+                summary: Cambio a Rented
+                value:
+                  status: Rented
+      responses:
+        '200':
+          description: Propiedad actualizada exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdatePropertyStatusResponse'
+              examples:
+                success:
+                  summary: Estado actualizado y imageUrl conservado
+                  value:
+                    id: a1f0e2d4-7c81-4d12-9e61-0b7f0b1a1001
+                    title: Casa Coral Way renovada
+                    status: Available
+                    imageUrl: /assets/properties/6c6bb3e7-4cf1-44e0-a3cf-f529f5a0be7a.jpg
+        '400':
+          description: Estado omitido, vacío o inválido
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '404':
+          description: Propiedad no encontrada para el id proporcionado
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+              examples:
+                notFound:
+                  summary: Propiedad inexistente
+                  value:
+                    type: https://tools.ietf.org/html/rfc7231#section-6.5.4
+                    title: Propiedad no encontrada.
+                    status: 404
+                    detail: No existe una propiedad con el id proporcionado.
+components:
+  schemas:
+    UpdatePropertyStatusRequest:
+      type: object
+      additionalProperties: false
+      required:
+        - status
+      properties:
+        status:
+          type: string
+          enum:
+            - Available
+            - Rented
+            - Maintenance
+          description: Valor del catálogo de estados actual.
+    UpdatePropertyStatusResponse:
+      type: object
+      required:
+        - id
+        - title
+        - status
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        status:
+          type: string
+        imageUrl:
+          type: string
+          nullable: true
+          description: URL pública o relativa de la imagen conservada sin cambios.
+    ProblemDetails:
+      type: object
+      properties:
+        type:
+          type: string
+        title:
+          type: string
+        status:
+          type: integer
+          format: int32
+        detail:
+          type: string
+        instance:
+          type: string

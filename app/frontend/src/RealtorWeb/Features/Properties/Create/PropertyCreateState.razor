@@ -1,0 +1,44 @@
+@if (State is PropertyCreateStateType.Submitting)
+{
+    <section class="state-loading property-state" role="status" aria-live="polite">
+        <strong>Enviando propiedad</strong>
+        <p>@(Message ?? "Procesando alta de inmueble...")</p>
+    </section>
+}
+else if (State is PropertyCreateStateType.SubmitSucceeded)
+{
+    <section class="state-success property-state" role="status" aria-live="polite">
+        <strong>Alta completada</strong>
+        <p>@(Message ?? "La propiedad se creo correctamente.")</p>
+        @if (Actions is not null)
+        {
+            <div class="property-state-actions">
+                @Actions
+            </div>
+        }
+    </section>
+}
+else if (State is PropertyCreateStateType.SubmitFailed)
+{
+    <section class="state-error property-state" role="alert" aria-live="assertive">
+        <strong>No fue posible completar el alta</strong>
+        <p>@(Message ?? "Revisa los datos e intenta nuevamente.")</p>
+        @if (Actions is not null)
+        {
+            <div class="property-state-actions">
+                @Actions
+            </div>
+        }
+    </section>
+}
+
+@code {
+    [Parameter]
+    public PropertyCreateStateType State { get; set; } = PropertyCreateStateType.Editing;
+
+    [Parameter]
+    public string? Message { get; set; }
+
+    [Parameter]
+    public RenderFragment? Actions { get; set; }
+}

@@ -1,138 +1,208 @@
-# Tareas: Fundación de la Solución Realtor
+# Tasks: Fundación de la Solución Realtor
 
-**Entrada**: Documentos de diseño en `specs/001-realtor-solution-foundation/`
+**Input**: Documentos de diseño desde `/specs/001-realtor-solution-foundation/`
 
-**Prerrequisitos**: `plan.md` y `spec.md`.
+**Prerequisites**: plan.md (requerido), spec.md (requerido), research.md, data-model.md, contracts/, quickstart.md
 
-**Pruebas**: La spec requiere proyectos de pruebas y compilación correcta, pero no solicita escribir casos de prueba. Se crean proyectos xUnit vacíos y se ejecutan `dotnet build` y `dotnet test` como validación final.
+**Tests**: Se incluyen tareas de pruebas unitarias base porque la spec exige proyectos de test para backend y frontend (RF-003, RF-005) y verificación ejecutable de la solución base (CE-002).
 
-**Organización**: Tareas agrupadas por historia de usuario y orden de prioridad. La investigación y las decisiones técnicas se consolidan en `plan.md`; no se crean documentos auxiliares.
+**Organization**: Las tareas se agrupan por historia de usuario para permitir implementación y validación independiente.
 
-## Fase 1: Preparación
+## Formato: `[ID] [P?] [Story] Descripción`
 
-**Propósito**: Confirmar el SDK de origen antes de crear proyectos.
+- **[P]**: Puede ejecutarse en paralelo (archivos distintos, sin dependencia de tarea incompleta)
+- **[Story]**: Historia asociada (`[US1]`, `[US2]`, `[US3]`)
+- Cada tarea incluye ruta de archivo específica
 
-- [x] T001 Verificar que `global.json` fija el SDK `11.0.100-preview.5.26302.115` y que `dotnet --version` lo resuelve, sin modificar `global.json`.
+## Phase 1: Setup (Inicialización)
 
-## Fase 2: Fundamentos Compartidos
+**Purpose**: Crear base mínima del workspace y confirmar baseline de plataforma
 
-**Propósito**: Crear la solución única que contendrá los cuatro proyectos.
+- [X] T001 Verificar baseline de SDK en global.json
+- [X] T002 Crear estructura de carpetas base en app/backend/src/RealtorApi/.gitkeep
+- [X] T003 [P] Crear estructura de carpetas base en app/backend/tests/RealtorApiTests/.gitkeep
+- [X] T004 [P] Crear estructura de carpetas base en app/frontend/src/RealtorWeb/.gitkeep
+- [X] T005 [P] Crear estructura de carpetas base en app/frontend/test/RealtorWeb/.gitkeep
+- [X] T006 Crear solución principal vacía en app/Realtor.sln
 
-- [x] T002 Crear la solución vacía en formato `.sln` en `app/Realtor.sln`.
+---
 
-**Punto de control**: La solución existe y está vacía antes de generar los proyectos.
+## Phase 2: Foundational (Prerequisitos Bloqueantes)
 
-## Fase 3: Historia de Usuario 1 - Crear la base única de solución (Prioridad: P1)
+**Purpose**: Infraestructura común obligatoria antes de implementar historias de usuario
 
-**Objetivo**: Crear una solución compilable con backend, frontend y sus proyectos de pruebas en las rutas aprobadas.
+**⚠️ CRITICAL**: Ninguna historia debe comenzar antes de completar esta fase
 
-**Prueba independiente**: `dotnet sln app/Realtor.sln list` muestra exactamente los cuatro proyectos solicitados y cada archivo `.csproj` existe en su ruta canónica.
+- [X] T007 Inicializar proyecto backend base en app/backend/src/RealtorApi/RealtorApi.csproj
+- [X] T008 Inicializar proyecto frontend base en app/frontend/src/RealtorWeb/RealtorWeb.csproj
+- [X] T009 [P] Inicializar proyecto de pruebas backend en app/backend/tests/RealtorApiTests/RealtorApiTests.csproj
+- [X] T010 [P] Inicializar proyecto de pruebas frontend en app/frontend/test/RealtorWeb/RealtorWebTests.csproj
+- [X] T011 Agregar proyecto backend y frontend a la solución en app/Realtor.sln
+- [X] T012 Agregar proyectos de pruebas a la solución en app/Realtor.sln
+- [X] T013 Configurar referencias mínimas de prueba en app/backend/tests/RealtorApiTests/RealtorApiTests.csproj
+- [X] T014 Configurar referencias mínimas de prueba en app/frontend/test/RealtorWeb/RealtorWebTests.csproj
 
-### Implementación
+**Checkpoint**: Base técnica lista para implementar historias
 
-- [x] T003 [P] [US1] Crear el proyecto ASP.NET Core Web API con Minimal APIs explícitas y TFM `net11.0` en `app/backend/src/RealtorApi/RealtorApi.csproj`.
-- [x] T004 [P] [US1] Crear el proyecto xUnit vacío de backend en `app/backend/tests/RealtorApiTests/RealtorApiTests.csproj`, sin conservar tests de plantilla.
-- [x] T005 [P] [US1] Crear la Blazor Web App vacía, con `--empty` y `--interactivity None`, sin contenido de bienvenida en `app/frontend/src/RealtorWeb/RealtorWeb.csproj`.
-- [x] T006 [P] [US1] Crear el proyecto xUnit vacío de frontend en `app/frontend/test/RealtorWeb/RealtorWeb.Tests.csproj`, sin conservar tests de plantilla.
-- [x] T007 [P] [US1] Agregar los cuatro proyectos a `app/Realtor.sln` sin crear una segunda solución.
-- [x] T008 [P] [US1] Agregar la referencia de `app/backend/tests/RealtorApiTests/RealtorApiTests.csproj` a `app/backend/src/RealtorApi/RealtorApi.csproj` y la referencia de `app/frontend/test/RealtorWeb/RealtorWeb.Tests.csproj` a `app/frontend/src/RealtorWeb/RealtorWeb.csproj`.
-- [x] T009 [P] [US1] Asegurar que los estilos propios de la aplicación se centralizan en `app/frontend/src/RealtorWeb/wwwroot/app.css` y que `app/frontend/src/RealtorWeb/Components/App.razor` no referencia Bootstrap ni otro framework CSS.
+---
 
-**Punto de control**: Las rutas y referencias de los cuatro proyectos coinciden con `spec.md` y `plan.md`; las plantillas no agregan features de demostración.
+## Phase 3: User Story 1 - Crear la base única de solución (Priority: P1) 🎯 MVP
 
-## Fase 4: Historia de Usuario 2 - Asegurar arranque técnico mínimo sin negocio (Prioridad: P2)
+**Goal**: Dejar una solución única con backend, frontend y pruebas en rutas canónicas
 
-**Objetivo**: Mantener el backend limitado a servicios, middleware y mapeo técnico, sin lógica de negocio, controllers ni entidades.
+**Independent Test**: La solución en app/Realtor.sln contiene exactamente 4 proyectos base y compila en una ejecución completa
 
-**Prueba independiente**: Inspeccionar `app/backend/src/RealtorApi/Program.cs` y confirmar que solo registra ProblemDetails, manejo global de errores y logging estructurado, configura el pipeline y mapea OpenAPI en desarrollo; no contiene endpoints de producto.
+### Implementation for User Story 1
 
-### Implementación
+- [X] T015 [US1] Crear archivo de arranque backend mínimo en app/backend/src/RealtorApi/Program.cs
+- [X] T016 [P] [US1] Crear archivo de arranque frontend base en app/frontend/src/RealtorWeb/Program.cs
+- [X] T017 [P] [US1] Crear prueba unitaria de humo backend en app/backend/tests/RealtorApiTests/FoundationSmokeTests.cs
+- [X] T018 [P] [US1] Crear prueba unitaria de humo frontend en app/frontend/test/RealtorWeb/FoundationSmokeTests.cs
+- [X] T019 [US1] Validar composición de solución y actualizar guía de verificación en specs/001-realtor-solution-foundation/quickstart.md
+- [X] T020 [US1] Ejecutar build de verificación y registrar estado de compilación en specs/001-realtor-solution-foundation/data-model.md
 
-- [x] T010 [US2] Configurar `app/backend/src/RealtorApi/Program.cs` con servicios base, `AddProblemDetails`, `UseExceptionHandler`, logging estructurado JSON y mapeo de OpenAPI solo en desarrollo; retirar del mismo proyecto endpoints, modelos o archivos de demostración generados por la plantilla.
+**Checkpoint**: US1 funcional y verificable de forma independiente (MVP)
 
-**Punto de control**: `Program.cs` no contiene lógica de producto; el proyecto no contiene controllers ni entidades de dominio.
+---
 
-## Fase 5: Historia de Usuario 3 - Dejar base lista para evolución por specs (Prioridad: P3)
+## Phase 4: User Story 2 - Asegurar arranque técnico mínimo sin negocio (Priority: P2)
 
-**Objetivo**: Confirmar que las rutas y límites del diseño permiten continuar sobre una única solución sin reestructuración ni proyectos genéricos adicionales.
+**Goal**: Restringir backend a configuración base, middleware y endpoint técnico mínimo sin dominio
 
-**Prueba independiente**: Comparar el grafo de proyectos de `app/Realtor.sln` y sus rutas con la estructura definida en `specs/001-realtor-solution-foundation/plan.md`.
+**Independent Test**: El backend solo contiene arranque técnico mínimo y prueba de disponibilidad sin lógica de negocio
 
-### Verificación
+### Implementation for User Story 2
 
-- [x] T011 [US3] Verificar en `app/Realtor.sln` que existen solo los cuatro proyectos aprobados, que cada proyecto de pruebas referencia únicamente su aplicación y que no se añadieron proyectos de dominio o infraestructura fuera de alcance.
+- [X] T021 [US2] Limitar configuración de backend a servicios/middleware base en app/backend/src/RealtorApi/Program.cs
+- [X] T022 [P] [US2] Implementar endpoint técnico GET /health en app/backend/src/RealtorApi/Program.cs
+- [X] T023 [P] [US2] Configurar logging estructurado mínimo en app/backend/src/RealtorApi/appsettings.json
+- [X] T024 [US2] Alinear contrato HTTP técnico con implementación en specs/001-realtor-solution-foundation/contracts/backend-bootstrap.openapi.yaml
+- [X] T025 [US2] Crear prueba unitaria del endpoint técnico en app/backend/tests/RealtorApiTests/HealthEndpointTests.cs
+- [X] T026 [US2] Documentar verificación de ausencia de lógica de negocio en specs/001-realtor-solution-foundation/research.md
 
-**Punto de control**: La solución puede servir como base de iniciativas posteriores sin introducir una segunda solución ni capas no aprobadas.
+**Checkpoint**: US2 funcional y verificable de forma independiente
 
-## Fase 6: Pulido y Validación Transversal
+---
 
-**Propósito**: Verificar compilación, ejecución de los proyectos de pruebas y alcance sin negocio.
+## Phase 5: User Story 3 - Dejar base lista para evolución por specs (Priority: P3)
 
-- [x] T012 Ejecutar `dotnet sln app/Realtor.sln list`, `dotnet build app/Realtor.sln` y `dotnet test app/Realtor.sln`; confirmar además que `global.json` permanece sin cambios y no existen páginas de ejemplo, migraciones ni entidades de dominio.
+**Goal**: Dejar explícitas reglas y validaciones para evolución incremental sin reestructuración
 
-## Dependencias y Orden de Ejecución
+**Independent Test**: Una nueva iniciativa puede reutilizar app/Realtor.sln y sus rutas sin crear segunda solución
 
-### Dependencias entre fases
+### Implementation for User Story 3
 
-- Preparación: T001 no depende de otras tareas.
-- Fundamentos: T002 depende de T001 y bloquea la creación de proyectos.
-- Historia de Usuario 1: T003-T006 dependen de T002; T007-T009 dependen de T003-T006.
-- Historia de Usuario 2: T010 depende de T003 y se ejecuta después de completar la Historia de Usuario 1.
-- Historia de Usuario 3: T011 depende de T007-T010.
-- Pulido: T012 depende de todas las tareas anteriores.
+- [X] T027 [US3] Documentar estrategia de evolución incremental por specs en specs/001-realtor-solution-foundation/plan.md
+- [X] T028 [P] [US3] Consolidar reglas de idempotencia y no sobreescritura en specs/001-realtor-solution-foundation/research.md
+- [X] T029 [P] [US3] Confirmar trazabilidad de entidades estructurales en specs/001-realtor-solution-foundation/data-model.md
+- [X] T030 [US3] Expandir checklist de verificación de transición a siguiente iniciativa en specs/001-realtor-solution-foundation/checklists/requirements.md
 
-### Orden entre historias
+**Checkpoint**: US3 funcional y verificable de forma independiente
 
-1. Historia de Usuario 1 (P1) establece la solución y los proyectos.
-2. Historia de Usuario 2 (P2) configura el arranque del backend ya creado.
-3. Historia de Usuario 3 (P3) verifica la estructura final antes de la validación transversal.
+---
 
-### Oportunidades de paralelismo
+## Phase 6: Polish & Cross-Cutting Concerns
 
-- Historia de Usuario 1: después de T002, T003, T004, T005 y T006 pueden ejecutarse en paralelo porque crean archivos en proyectos distintos.
-- Historia de Usuario 1: después de generar los proyectos, T007, T008 y T009 pueden ejecutarse en paralelo porque modifican la solución, los proyectos de pruebas y los estilos, respectivamente.
-- Historia de Usuario 2: T010 es la única tarea de esta historia; no hay paralelismo interno.
-- Historia de Usuario 3: T011 es una verificación única y depende de la estructura completa.
+**Purpose**: Ajustes finales de consistencia transversal
 
-### Ejemplo de ejecución paralela: Historia de Usuario 1
+- [X] T031 [P] Normalizar formato final de guía de validación en specs/001-realtor-solution-foundation/quickstart.md
+- [X] T032 [P] Revisar consistencia final de contrato técnico en specs/001-realtor-solution-foundation/contracts/backend-bootstrap.openapi.yaml
+- [X] T033 Ejecutar validación completa de escenarios y registrar resultados en specs/001-realtor-solution-foundation/quickstart.md
 
-```text
-En paralelo después de T002:
-- T003: Crear backend Minimal API en app/backend/src/RealtorApi/RealtorApi.csproj
-- T004: Crear pruebas de backend en app/backend/tests/RealtorApiTests/RealtorApiTests.csproj
-- T005: Crear Blazor Web App en app/frontend/src/RealtorWeb/RealtorWeb.csproj
-- T006: Crear pruebas de frontend en app/frontend/test/RealtorWeb/RealtorWeb.Tests.csproj
+---
 
-En paralelo después de T003-T006:
-- T007: Registrar proyectos en app/Realtor.sln
-- T008: Configurar referencias en ambos proyectos de pruebas
-- T009: Revisar app.css y referencias CSS en Components/App.razor
+## Dependencies & Execution Order
+
+### Phase Dependencies
+
+- **Setup (Phase 1)**: Sin dependencias, inicia inmediatamente
+- **Foundational (Phase 2)**: Depende de Phase 1, bloquea todas las historias
+- **User Stories (Phase 3+)**: Dependen de completar Phase 2
+- **Polish (Phase 6)**: Depende de completar historias seleccionadas
+
+### User Story Dependencies
+
+- **US1 (P1)**: Inicia tras Foundational, sin dependencia de US2/US3
+- **US2 (P2)**: Inicia tras Foundational, independiente de US1 salvo artefactos base compartidos
+- **US3 (P3)**: Inicia tras Foundational, puede ejecutarse en paralelo con US2 si US1 ya consolidó estructura
+
+### Within Each User Story
+
+- Estructura/arranque base antes de validaciones
+- Contrato/documentación alineada después de implementación técnica
+- Pruebas unitarias antes del cierre de la historia
+
+---
+
+## Parallel Opportunities
+
+- **Setup**: T003, T004 y T005 en paralelo
+- **Foundational**: T009 y T010 en paralelo; T013 y T014 en paralelo
+- **US1**: T016, T017 y T018 en paralelo
+- **US2**: T022 y T023 en paralelo
+- **US3**: T028 y T029 en paralelo
+- **Polish**: T031 y T032 en paralelo
+
+---
+
+## Parallel Example: User Story 1
+
+```bash
+# Ejecutar en paralelo dentro de US1:
+T016 -> app/frontend/src/RealtorWeb/Program.cs
+T017 -> app/backend/tests/RealtorApiTests/FoundationSmokeTests.cs
+T018 -> app/frontend/test/RealtorWeb/FoundationSmokeTests.cs
 ```
 
-### Ejemplo de ejecución paralela: Historia de Usuario 2
+## Parallel Example: User Story 2
 
-No aplica: T010 es el único cambio de la historia y modifica `app/backend/src/RealtorApi/Program.cs` junto con la limpieza de archivos de ejemplo relacionados.
+```bash
+# Ejecutar en paralelo dentro de US2:
+T022 -> app/backend/src/RealtorApi/Program.cs
+T023 -> app/backend/src/RealtorApi/appsettings.json
+```
 
-### Ejemplo de ejecución paralela: Historia de Usuario 3
+## Parallel Example: User Story 3
 
-No aplica: T011 valida el grafo ya ensamblado en `app/Realtor.sln` y requiere que terminen las tareas anteriores.
+```bash
+# Ejecutar en paralelo dentro de US3:
+T028 -> specs/001-realtor-solution-foundation/research.md
+T029 -> specs/001-realtor-solution-foundation/data-model.md
+```
 
-## Estrategia de Implementación
+---
 
-### MVP
+## Implementation Strategy
 
-El MVP es la Historia de Usuario 1: crea la solución y cuatro proyectos con referencias correctas. Completar T001-T009 y validar la lista de proyectos y compilación antes de avanzar. La Historia de Usuario 2 termina el arranque mínimo requerido; la Historia de Usuario 3 y T012 confirman la estructura completa y su compilación/pruebas.
+### MVP First (Solo US1)
 
-### Entrega Incremental
+1. Completar Phase 1 y Phase 2
+2. Completar US1 (Phase 3)
+3. Validar build y composición de solución
+4. Detener para demo/aceptación MVP
 
-1. Completar preparación y solución vacía.
-2. Generar los proyectos de la Historia de Usuario 1 y ensamblar sus referencias.
-3. Completar la configuración mínima de backend de la Historia de Usuario 2.
-4. Verificar los límites de la Historia de Usuario 3 y ejecutar la validación final.
+### Incremental Delivery
 
-## Notas
+1. Base técnica (Phase 1 + 2)
+2. US1 (MVP estructural)
+3. US2 (arranque mínimo sin negocio)
+4. US3 (preparación para escalado por specs)
+5. Polish final
 
-- Todas las tareas incluyen identificador, checkbox y ruta concreta; las tareas de historias incluyen su etiqueta `[US1]`, `[US2]` o `[US3]`.
-- `[P]` se usa solo para tareas con archivos distintos y sin dependencia mutua.
-- No se escriben pruebas de lógica porque la spec no las solicita; los proyectos xUnit son parte explícita del alcance y `dotnet test` es una verificación de compilación/descubrimiento.
-- No se modifica `global.json`, no se crean artefactos auxiliares de planificación ni archivos no trazados en esta lista.
+### Parallel Team Strategy
+
+1. Equipo completo en Phase 1 + 2
+2. Luego distribuir historias por desarrollador:
+   - Dev A: US1
+   - Dev B: US2
+   - Dev C: US3
+3. Integración y cierre con Phase 6
+
+---
+
+## Notes
+
+- Tareas con `[P]` no deben editar el mismo archivo en paralelo
+- Cada historia mantiene criterio de prueba independiente
+- Toda implementación debe respetar límites foundation: sin negocio, sin entidades de dominio
+- Marcar cada tarea como `[X]` únicamente tras verificación real

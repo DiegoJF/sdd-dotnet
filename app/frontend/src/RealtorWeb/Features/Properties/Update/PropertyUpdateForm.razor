@@ -1,0 +1,141 @@
+@using Lucide.Blazor.Components
+
+<article class="card property-update-card">
+    <div class="card-body">
+        @if (_state is PropertyUpdateStateType.LoadingInitialData)
+        {
+            <PropertyUpdateState State="PropertyUpdateStateType.LoadingInitialData" Message="@_statusMessage" />
+            return;
+        }
+
+        @if (_state is PropertyUpdateStateType.LoadFailed)
+        {
+            <PropertyUpdateState State="PropertyUpdateStateType.LoadFailed" Message="@_statusMessage">
+                <Actions>
+                    <button type="button" class="btn btn-primary" @onclick="RetryLoadAsync">Reintentar</button>
+                    <button type="button" class="btn btn-secondary" @onclick="BackToList">Volver al listado</button>
+                </Actions>
+            </PropertyUpdateState>
+            return;
+        }
+
+        @if (_state is PropertyUpdateStateType.Submitting or PropertyUpdateStateType.SubmitSucceeded or PropertyUpdateStateType.SubmitFailed)
+        {
+            <PropertyUpdateState State="@_state" Message="@_statusMessage">
+                <Actions>
+                    @if (_state is PropertyUpdateStateType.SubmitFailed)
+                    {
+                        <button type="button" class="btn btn-secondary" @onclick="ClearGlobalError">Continuar edición</button>
+                    }
+                </Actions>
+            </PropertyUpdateState>
+        }
+
+        @if (_submitSummaryErrors.Count > 0)
+        {
+            <section class="update-error-summary" role="alert" aria-live="assertive">
+                <h2 class="create-error-summary-title">Revisa los siguientes puntos:</h2>
+                <ul>
+                    @foreach (var item in _submitSummaryErrors)
+                    {
+                        <li>@item</li>
+                    }
+                </ul>
+            </section>
+        }
+
+        <EditForm EditContext="_editContext" OnValidSubmit="HandleValidSubmitAsync" class="property-create-form" novalidate>
+            <DataAnnotationsValidator />
+
+            <div class="form-grid-two">
+                <div class="form-field">
+                    <label for="title">Titulo</label>
+                    <InputText id="title" class="form-control" @bind-Value="_model.Title" />
+                    <ValidationMessage For="() => _model.Title" />
+                </div>
+
+                <div class="form-field">
+                    <label for="status">Estado</label>
+                    <InputSelect id="status" class="form-control" @bind-Value="_model.Status">
+                        @foreach (var option in _statusOptions)
+                        {
+                            <option value="@((int)option)">@GetStatusLabel(option)</option>
+                        }
+                    </InputSelect>
+                    <ValidationMessage For="() => _model.Status" />
+                </div>
+            </div>
+
+            <div class="form-field">
+                <label for="description">Descripcion</label>
+                <InputTextArea id="description" class="form-control form-control-textarea" @bind-Value="_model.Description" />
+                <ValidationMessage For="() => _model.Description" />
+            </div>
+
+            <div class="form-field">
+                <label for="address">Direccion</label>
+                <InputText id="address" class="form-control" @bind-Value="_model.Address" />
+                <ValidationMessage For="() => _model.Address" />
+            </div>
+
+            <div class="form-grid-two">
+                <div class="form-field">
+                    <label for="price">Precio</label>
+                    <InputNumber id="price" class="form-control" @bind-Value="_model.Price" step="0.01" />
+                    <ValidationMessage For="() => _model.Price" />
+                </div>
+            </div>
+
+            <div class="form-field">
+                <label>Imagen actual</label>
+                @if (_currentImageUrl is not null)
+                {
+                    <figure class="update-current-image">
+                        <img src="@_currentImageUrl" alt="Imagen actual del inmueble" class="create-image-preview-image" />
+                    </figure>
+                }
+                else
+                {
+                    <p class="page-subtitle">Este inmueble no tiene imagen asociada.</p>
+                }
+            </div>
+
+            <div class="form-field">
+                <label for="image">Nueva imagen (opcional)</label>
+                <InputFile id="image" OnChange="OnImageSelectedAsync" accept="image/png,image/jpeg" />
+                @if (_imageValidationError is not null)
+                {
+                    <p class="validation-message">@_imageValidationError</p>
+                }
+
+                @if (_selectedImageName is not null)
+                {
+                    <div class="create-image-toolbar">
+                        <span class="create-image-name">@_selectedImageName</span>
+                        <button type="button" class="btn btn-ghost" @onclick="RemoveImageSelection">
+                            <Icon Name="trash-2" Css="icon icon-sm" />
+                            Quitar reemplazo
+                        </button>
+                    </div>
+                }
+
+                @if (_imagePreviewUrl is not null)
+                {
+                    <figure class="create-image-preview">
+                        <img src="@_imagePreviewUrl" alt="Vista previa de la nueva imagen" class="create-image-preview-image" />
+                    </figure>
+                }
+            </div>
+
+            <div class="form-actions">
+                <button type="button" class="btn btn-secondary" @onclick="BackToList" disabled="@_isSubmitting">
+                    Volver al listado
+                </button>
+                <button type="submit" class="btn btn-primary" disabled="@_isSubmitting">
+                    <Icon Name="save" Css="icon icon-md" />
+                    Guardar cambios
+                </button>
+            </div>
+        </EditForm>
+    </div>
+</article>

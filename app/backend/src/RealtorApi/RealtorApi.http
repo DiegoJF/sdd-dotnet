@@ -1,0 +1,550 @@
+@RealtorApi_HostAddress = http://localhost:5023
+
+GET {{RealtorApi_HostAddress}}/openapi/v1.json
+Accept: application/json
+
+###
+
+GET {{RealtorApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
+
+GET {{RealtorApi_HostAddress}}/api/properties
+Accept: application/json
+
+###
+
+GET {{RealtorApi_HostAddress}}/api/properties?page=1&pageSize=6
+Accept: application/json
+
+###
+
+POST {{RealtorApi_HostAddress}}/api/properties
+Content-Type: multipart/form-data; boundary=CreatePropertyNoImage
+
+--CreatePropertyNoImage
+Content-Disposition: form-data; name="title"
+
+Casa sin imagen
+--CreatePropertyNoImage
+Content-Disposition: form-data; name="description"
+
+Alta de propiedad sin archivo de imagen
+--CreatePropertyNoImage
+Content-Disposition: form-data; name="address"
+
+123 Main St
+--CreatePropertyNoImage
+Content-Disposition: form-data; name="price"
+
+1750.50
+--CreatePropertyNoImage
+Content-Disposition: form-data; name="status"
+
+Available
+--CreatePropertyNoImage
+Content-Disposition: form-data; name="bedroomCount"
+
+2
+--CreatePropertyNoImage
+Content-Disposition: form-data; name="bathroomCount"
+
+1
+--CreatePropertyNoImage
+Content-Disposition: form-data; name="areaSquareMeters"
+
+78.4
+--CreatePropertyNoImage--
+
+###
+
+POST {{RealtorApi_HostAddress}}/api/properties
+Content-Type: multipart/form-data; boundary=CreatePropertyWithImage
+
+--CreatePropertyWithImage
+Content-Disposition: form-data; name="title"
+
+Casa con imagen
+--CreatePropertyWithImage
+Content-Disposition: form-data; name="description"
+
+Alta de propiedad con imagen valida
+--CreatePropertyWithImage
+Content-Disposition: form-data; name="address"
+
+456 Ocean Ave
+--CreatePropertyWithImage
+Content-Disposition: form-data; name="price"
+
+2450.00
+--CreatePropertyWithImage
+Content-Disposition: form-data; name="status"
+
+Available
+--CreatePropertyWithImage
+Content-Disposition: form-data; name="bedroomCount"
+
+3
+--CreatePropertyWithImage
+Content-Disposition: form-data; name="bathroomCount"
+
+2
+--CreatePropertyWithImage
+Content-Disposition: form-data; name="areaSquareMeters"
+
+120.0
+--CreatePropertyWithImage
+Content-Disposition: form-data; name="image"; filename="1.png"
+Content-Type: image/png
+
+< ../../../../seed-data/images/properties/1.png
+--CreatePropertyWithImage--
+
+###
+
+POST {{RealtorApi_HostAddress}}/api/properties
+Content-Type: multipart/form-data; boundary=CreateProperty400
+
+--CreateProperty400
+Content-Disposition: form-data; name="title"
+
+
+--CreateProperty400
+Content-Disposition: form-data; name="description"
+
+Campos de negocio invalidos
+--CreateProperty400
+Content-Disposition: form-data; name="address"
+
+789 Error Ln
+--CreateProperty400
+Content-Disposition: form-data; name="price"
+
+0
+--CreateProperty400
+Content-Disposition: form-data; name="status"
+
+Available
+--CreateProperty400
+Content-Disposition: form-data; name="bedroomCount"
+
+1
+--CreateProperty400
+Content-Disposition: form-data; name="bathroomCount"
+
+1
+--CreateProperty400
+Content-Disposition: form-data; name="areaSquareMeters"
+
+35
+--CreateProperty400--
+
+###
+
+POST {{RealtorApi_HostAddress}}/api/properties
+Content-Type: multipart/form-data; boundary=CreateProperty415
+
+--CreateProperty415
+Content-Disposition: form-data; name="title"
+
+Casa formato invalido
+--CreateProperty415
+Content-Disposition: form-data; name="description"
+
+Imagen no permitida
+--CreateProperty415
+Content-Disposition: form-data; name="address"
+
+101 Invalid Rd
+--CreateProperty415
+Content-Disposition: form-data; name="price"
+
+1999
+--CreateProperty415
+Content-Disposition: form-data; name="status"
+
+Available
+--CreateProperty415
+Content-Disposition: form-data; name="bedroomCount"
+
+2
+--CreateProperty415
+Content-Disposition: form-data; name="bathroomCount"
+
+1
+--CreateProperty415
+Content-Disposition: form-data; name="areaSquareMeters"
+
+80
+--CreateProperty415
+Content-Disposition: form-data; name="image"; filename="invalid.txt"
+Content-Type: text/plain
+
+contenido no valido
+--CreateProperty415--
+
+###
+
+POST {{RealtorApi_HostAddress}}/api/properties
+Content-Type: multipart/form-data; boundary=CreateProperty413
+
+--CreateProperty413
+Content-Disposition: form-data; name="title"
+
+Casa imagen grande
+--CreateProperty413
+Content-Disposition: form-data; name="description"
+
+Ejemplo para validar limite de 5MB
+--CreateProperty413
+Content-Disposition: form-data; name="address"
+
+202 Big File St
+--CreateProperty413
+Content-Disposition: form-data; name="price"
+
+2600
+--CreateProperty413
+Content-Disposition: form-data; name="status"
+
+Available
+--CreateProperty413
+Content-Disposition: form-data; name="bedroomCount"
+
+3
+--CreateProperty413
+Content-Disposition: form-data; name="bathroomCount"
+
+2
+--CreateProperty413
+Content-Disposition: form-data; name="areaSquareMeters"
+
+130
+--CreateProperty413
+Content-Disposition: form-data; name="image"; filename="large.png"
+Content-Type: image/png
+
+< ./large-image-over-5mb.png
+--CreateProperty413--
+
+###
+
+POST {{RealtorApi_HostAddress}}/api/properties
+Content-Type: multipart/form-data; boundary=CreateProperty500
+
+--CreateProperty500
+Content-Disposition: form-data; name="title"
+
+Casa fallo interno
+--CreateProperty500
+Content-Disposition: form-data; name="description"
+
+Ejemplo para simular fallo interno de almacenamiento
+--CreateProperty500
+Content-Disposition: form-data; name="address"
+
+303 Internal Error Ave
+--CreateProperty500
+Content-Disposition: form-data; name="price"
+
+2800
+--CreateProperty500
+Content-Disposition: form-data; name="status"
+
+Available
+--CreateProperty500
+Content-Disposition: form-data; name="bedroomCount"
+
+3
+--CreateProperty500
+Content-Disposition: form-data; name="bathroomCount"
+
+2
+--CreateProperty500
+Content-Disposition: form-data; name="areaSquareMeters"
+
+140
+--CreateProperty500
+Content-Disposition: form-data; name="image"; filename="1.png"
+Content-Type: image/png
+
+< ../../../../seed-data/images/properties/1.png
+--CreateProperty500--
+
+###
+
+# ─────────────────────────────────────────────
+# PUT /api/properties/{id} — Actualización de propiedad
+# Reemplaza {propertyId} por un id real obtenido de GET /api/properties
+# ─────────────────────────────────────────────
+
+@propertyId = a1f0e2d4-7c81-4d12-9e61-0b7f0b1a1001
+
+### Escenario 1: Actualización exitosa sin imagen (200 OK — imageUrl previo conservado)
+
+PUT {{RealtorApi_HostAddress}}/api/properties/{{propertyId}}
+Content-Type: multipart/form-data; boundary=UpdatePropertyNoImage
+
+--UpdatePropertyNoImage
+Content-Disposition: form-data; name="title"
+
+Casa Coral Way renovada
+--UpdatePropertyNoImage
+Content-Disposition: form-data; name="description"
+
+Actualización sin imagen: datos de presentación corregidos
+--UpdatePropertyNoImage
+Content-Disposition: form-data; name="address"
+
+2450 SW 22nd St, Miami, FL 33145
+--UpdatePropertyNoImage
+Content-Disposition: form-data; name="price"
+
+4500.00
+--UpdatePropertyNoImage
+Content-Disposition: form-data; name="status"
+
+Available
+--UpdatePropertyNoImage--
+
+### Escenario 2: Actualización exitosa con imagen válida (200 OK — imageUrl reemplazado)
+
+PUT {{RealtorApi_HostAddress}}/api/properties/{{propertyId}}
+Content-Type: multipart/form-data; boundary=UpdatePropertyWithImage
+
+--UpdatePropertyWithImage
+Content-Disposition: form-data; name="title"
+
+Casa Coral Way con nueva imagen
+--UpdatePropertyWithImage
+Content-Disposition: form-data; name="description"
+
+Actualización con imagen válida PNG
+--UpdatePropertyWithImage
+Content-Disposition: form-data; name="address"
+
+2450 SW 22nd St, Miami, FL 33145
+--UpdatePropertyWithImage
+Content-Disposition: form-data; name="price"
+
+4800.00
+--UpdatePropertyWithImage
+Content-Disposition: form-data; name="status"
+
+Available
+--UpdatePropertyWithImage
+Content-Disposition: form-data; name="image"; filename="1.png"
+Content-Type: image/png
+
+< ../../../../seed-data/images/properties/1.png
+--UpdatePropertyWithImage--
+
+### Escenario 3: 404 Not Found — id inexistente
+
+PUT {{RealtorApi_HostAddress}}/api/properties/00000000-0000-0000-0000-000000000000
+Content-Type: multipart/form-data; boundary=UpdateProperty404
+
+--UpdateProperty404
+Content-Disposition: form-data; name="title"
+
+Propiedad inexistente
+--UpdateProperty404
+Content-Disposition: form-data; name="description"
+
+No existe este id en base de datos
+--UpdateProperty404
+Content-Disposition: form-data; name="address"
+
+404 Not Found St
+--UpdateProperty404
+Content-Disposition: form-data; name="price"
+
+1000
+--UpdateProperty404
+Content-Disposition: form-data; name="status"
+
+Available
+--UpdateProperty404--
+
+### Escenario 4: 400 Bad Request — campos de negocio inválidos
+
+PUT {{RealtorApi_HostAddress}}/api/properties/{{propertyId}}
+Content-Type: multipart/form-data; boundary=UpdateProperty400
+
+--UpdateProperty400
+Content-Disposition: form-data; name="title"
+
+--UpdateProperty400
+Content-Disposition: form-data; name="description"
+
+Campos inválidos en actualización
+--UpdateProperty400
+Content-Disposition: form-data; name="address"
+
+789 Error Ln
+--UpdateProperty400
+Content-Disposition: form-data; name="price"
+
+0
+--UpdateProperty400
+Content-Disposition: form-data; name="status"
+
+Available
+--UpdateProperty400--
+
+### Escenario 5: 415 Unsupported Media Type — formato de imagen no permitido
+
+PUT {{RealtorApi_HostAddress}}/api/properties/{{propertyId}}
+Content-Type: multipart/form-data; boundary=UpdateProperty415
+
+--UpdateProperty415
+Content-Disposition: form-data; name="title"
+
+Casa formato invalido
+--UpdateProperty415
+Content-Disposition: form-data; name="description"
+
+Imagen no permitida en actualización
+--UpdateProperty415
+Content-Disposition: form-data; name="address"
+
+101 Invalid Rd
+--UpdateProperty415
+Content-Disposition: form-data; name="price"
+
+1999
+--UpdateProperty415
+Content-Disposition: form-data; name="status"
+
+Available
+--UpdateProperty415
+Content-Disposition: form-data; name="image"; filename="invalid.txt"
+Content-Type: text/plain
+
+contenido no valido
+--UpdateProperty415--
+
+###
+
+# ─────────────────────────────────────────────
+# PATCH /api/properties/{id}/status — Actualización de estado
+# Reemplaza {propertyId} por un id real obtenido de GET /api/properties
+# ─────────────────────────────────────────────
+
+### Escenario 1: Actualización exitosa de estado (200 OK)
+
+PATCH {{RealtorApi_HostAddress}}/api/properties/{{propertyId}}/status
+Content-Type: application/json
+
+{
+	"status": "Rented"
+}
+
+### Escenario 2: 404 Not Found — id inexistente
+
+PATCH {{RealtorApi_HostAddress}}/api/properties/00000000-0000-0000-0000-000000000000/status
+Content-Type: application/json
+
+{
+	"status": "Available"
+}
+
+### Escenario 3: 400 Bad Request — status omitido
+
+PATCH {{RealtorApi_HostAddress}}/api/properties/{{propertyId}}/status
+Content-Type: application/json
+
+{}
+
+### Escenario 4: 400 Bad Request — status inválido
+
+PATCH {{RealtorApi_HostAddress}}/api/properties/{{propertyId}}/status
+Content-Type: application/json
+
+{
+	"status": "Archived"
+}
+
+### Escenario 5: 400 Bad Request — propiedad JSON inesperada
+
+PATCH {{RealtorApi_HostAddress}}/api/properties/{{propertyId}}/status
+Content-Type: application/json
+
+{
+	"status": "Available",
+	"extra": "no permitido"
+}
+
+### Escenario 6: 413 Payload Too Large — imagen mayor a 5 MB
+
+PUT {{RealtorApi_HostAddress}}/api/properties/{{propertyId}}
+Content-Type: multipart/form-data; boundary=UpdateProperty413
+
+--UpdateProperty413
+Content-Disposition: form-data; name="title"
+
+Casa imagen grande actualización
+--UpdateProperty413
+Content-Disposition: form-data; name="description"
+
+Imagen mayor a 5 MB en actualización
+--UpdateProperty413
+Content-Disposition: form-data; name="address"
+
+202 Big Image Ave
+--UpdateProperty413
+Content-Disposition: form-data; name="price"
+
+2500
+--UpdateProperty413
+Content-Disposition: form-data; name="status"
+
+Rented
+--UpdateProperty413
+Content-Disposition: form-data; name="image"; filename="large.png"
+Content-Type: image/png
+
+< ./large-image-over-5mb.png
+--UpdateProperty413--
+
+###
+
+# ─────────────────────────────────────────────
+# GET /api/properties/{id} — Consulta de propiedad por id
+# ─────────────────────────────────────────────
+
+@propertyWithImageId = a1f0e2d4-7c81-4d12-9e61-0b7f0b1a1001
+@propertyWithoutImageId = 00000000-0000-0000-0000-000000000001
+
+### Escenario 1: 200 OK — propiedad existente con imagen
+
+GET {{RealtorApi_HostAddress}}/api/properties/{{propertyWithImageId}}
+Accept: application/json
+
+### Escenario 2: 200 OK — propiedad existente sin imagen
+# Reemplazar propertyWithoutImageId por un id real sin imagen (por ejemplo, creado con el POST sin image).
+
+GET {{RealtorApi_HostAddress}}/api/properties/{{propertyWithoutImageId}}
+Accept: application/json
+
+### Escenario 3: 400 Bad Request — id inválido
+
+GET {{RealtorApi_HostAddress}}/api/properties/not-a-uuid
+Accept: application/json
+
+### Escenario 4: 404 Not Found — id inexistente
+
+GET {{RealtorApi_HostAddress}}/api/properties/00000000-0000-0000-0000-000000000000
+Accept: application/json
+
+# Expected (ProblemDetails):
+# {
+#   "type": "about:blank",
+#   "title": "Propiedad no encontrada.",
+#   "status": 404,
+#   "detail": "No existe una propiedad con el id proporcionado."
+# }
+
+###
+

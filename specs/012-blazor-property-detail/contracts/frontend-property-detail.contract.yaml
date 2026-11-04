@@ -1,0 +1,97 @@
+version: 1
+name: frontend-property-detail
+summary: Contrato visual y de interacción para la página de detalle de propiedad en RealtorWeb.
+
+route:
+  path: /properties/{id}
+  route_parameter:
+    name: id
+    type: string
+    required: true
+  source_navigation:
+    from: /
+    trigger: button-ver-in-property-card
+
+api_integration:
+  client_name: IPropertiesApi
+  registration: IHttpClientFactory-AddRefitClient
+  base_address_source: RealtorApi
+  endpoint:
+    method: GET
+    path: /api/properties/{id}
+    operation_id: GetPropertyById
+  responses:
+    success_200:
+      schema: PropertyDetailResponse
+      required_fields:
+        - id
+        - title
+        - description
+        - address
+        - price
+        - status
+        - bedroomCount
+        - bathroomCount
+        - areaSquareMeters
+        - imageUrl
+    validation_400:
+      schema: HttpValidationProblemDetails
+      ui_state: error
+    not_found_404:
+      schema: ProblemDetails
+      ui_state: not-found
+  prohibited:
+    - direct-httpclient-in-razor
+    - restservice-for-outside-di-registration
+
+ui_contract:
+  required_fields_visible:
+    - title
+    - image-or-placeholder
+    - description
+    - address
+    - price
+    - status
+    - bedroomCount
+    - bathroomCount
+    - areaSquareMeters
+  required_actions:
+    - back-to-list
+  list_card_change:
+    required_action:
+      label: Ver
+      target_route: /properties/{id}
+      navigation_type: blazor-navigation
+
+screen_states:
+  required_states:
+    - loading
+    - success
+    - not-found
+    - error
+  error_distinction:
+    not_found: 404
+    generic_error: non-404-or-network
+
+visual_rules:
+  source_of_truth: app/frontend/src/RealtorWeb/wwwroot/app.css
+  required:
+    - detail-media-placeholder-when-imageurl-null
+    - reusable-state-classes
+    - btn-btn-primary-for-ver
+    - lucide-icons-only
+  prohibited:
+    - inline-styles-in-razor
+    - hardcoded-colors-in-razor-or-cs
+    - external-css-frameworks
+    - non-lucide-icon-systems
+
+responsive:
+  mode: desktop-first
+  requirement: readable-and-usable-in-mobile-and-tablet
+
+validation:
+  compile_required: true
+  route_navigation_required: true
+  error_state_distinction_required: true
+  placeholder_required_when_imageurl_null: true

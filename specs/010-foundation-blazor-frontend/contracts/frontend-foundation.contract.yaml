@@ -1,0 +1,79 @@
+version: 1
+name: frontend-foundation-blazor
+summary: Contrato de fundación frontend para RealtorWeb sin features de negocio.
+
+ui_shell:
+  required_classes:
+    - app-shell
+    - app-sidebar
+    - app-main
+    - app-content
+    - page-container
+    - page-header
+    - page-title
+    - page-subtitle
+    - page-actions
+  behavior:
+    desktop:
+      sidebar: fixed-or-stable-left
+      content: fluid-right
+    tablet:
+      navigation: compact
+    mobile:
+      navigation: collapsed-or-drawer
+
+visual_system:
+  source_of_truth: wwwroot/app.css
+  root_tokens_required:
+    - color
+    - spacing
+    - radius
+    - shadow
+    - layout
+  prohibited:
+    - inline-styles-in-razor
+    - hardcoded-colors-in-razor-or-cs
+    - external-css-frameworks
+
+icon_system:
+  provider: Lucide.Blazor
+  classes_required:
+    - icon
+    - icon-sm
+    - icon-md
+    - icon-lg
+  color_strategy: currentColor
+  prohibited:
+    - bootstrap-icons
+    - font-awesome
+    - fluent-icons
+
+screen_states:
+  required_states:
+    - loading
+    - empty
+    - error
+    - success
+  implementation: reusable-css-patterns-in-app-css
+
+api_bootstrap:
+  client_style: refit-typed-interfaces
+  registration: IHttpClientFactory-AddRefitClient
+  base_address_target: RealtorApi
+  organization: per-module-or-feature
+  prohibited:
+    - direct-httpclient-in-components
+    - restservice-for-outside-di-registration
+  business_endpoints_in_scope: false
+
+cleanup:
+  remove_bootstrap_css_link_from: Components/App.razor
+  remove_bootstrap_assets_dir: wwwroot/lib/bootstrap
+  remove_or_adjust_template_styles:
+    - Components/Layout/MainLayout.razor.css
+    - Components/Layout/NavMenu.razor.css
+    - wwwroot/app.css
+
+validation:
+  compile_required: true
+  zero_external_css_frameworks_loaded: true

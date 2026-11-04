@@ -1,0 +1,56 @@
+openapi: 3.0.3
+info:
+  title: Realtor API - Contrato Técnico Foundation
+  version: 0.1.0
+  description: >-
+    Contrato mínimo de arranque técnico para la iniciativa foundation.
+    No expone operaciones de negocio.
+servers:
+  - url: http://localhost:5000
+paths:
+  /health:
+    get:
+      summary: Verificar disponibilidad técnica del backend
+      operationId: getHealth
+      tags:
+        - Foundation
+      responses:
+        '200':
+          description: Backend disponible
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+        '503':
+          description: Backend no disponible
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+components:
+  schemas:
+    HealthResponse:
+      type: object
+      required:
+        - status
+      properties:
+        status:
+          type: string
+          enum:
+            - ok
+          example: ok
+    ProblemDetails:
+      type: object
+      properties:
+        type:
+          type: string
+          format: uri
+        title:
+          type: string
+        status:
+          type: integer
+          format: int32
+        detail:
+          type: string
+        instance:
+          type: string

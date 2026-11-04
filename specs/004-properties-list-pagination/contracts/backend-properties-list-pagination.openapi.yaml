@@ -1,0 +1,155 @@
+openapi: 3.0.3
+info:
+  title: Realtor API - Listado Paginado de Propiedades
+  version: 0.1.0
+  description: >-
+    Contrato público del endpoint GET /api/properties. Documenta la respuesta
+    paginada, la validación de parámetros y la convención de URL pública para
+    las imágenes de propiedades.
+servers:
+  - url: http://localhost:5023
+paths:
+  /api/properties:
+    get:
+      operationId: listProperties
+      summary: Lista paginada de propiedades
+      parameters:
+        - name: page
+          in: query
+          required: false
+          description: Número de página a consultar. Si no se envía, se usa 1.
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: pageSize
+          in: query
+          required: false
+          description: Tamaño de página. Si no se envía, se usa 6.
+          schema:
+            type: integer
+            minimum: 1
+            default: 6
+      responses:
+        '200':
+          description: Listado paginado de propiedades
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagedPropertyListResponse'
+              examples:
+                defaultPage:
+                  summary: Respuesta de la primera página
+                  value:
+                    items:
+                      - id: a1f0e2d4-7c81-4d12-9e61-0b7f0b1a1001
+                        title: Casa Coral Way con jardín tropical
+                        description: Casa familiar con espacios amplios, jardín tropical y excelente acceso a las principales zonas de Miami.
+                        address: 2450 SW 22nd St, Miami, FL 33145
+                        price: 4200.0
+                        status: Available
+                        bedroomCount: 3
+                        bathroomCount: 2
+                        areaSquareMeters: 185.5
+                        imageUrl: http://localhost:5023/assets/properties/1.png
+                    page: 1
+                    pageSize: 6
+                    totalItems: 10
+                    totalPages: 2
+                    hasNext: true
+                    hasPrevious: false
+        '400':
+          description: Parámetros de paginación inválidos
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ValidationProblemDetails'
+components:
+  schemas:
+    PagedPropertyListResponse:
+      type: object
+      required:
+        - items
+        - page
+        - pageSize
+        - totalItems
+        - totalPages
+        - hasNext
+        - hasPrevious
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/PropertyListItem'
+        page:
+          type: integer
+          minimum: 1
+        pageSize:
+          type: integer
+          minimum: 1
+        totalItems:
+          type: integer
+          minimum: 0
+        totalPages:
+          type: integer
+          minimum: 0
+        hasNext:
+          type: boolean
+        hasPrevious:
+          type: boolean
+    PropertyListItem:
+      type: object
+      required:
+        - id
+        - title
+        - description
+        - address
+        - price
+        - status
+        - bedroomCount
+        - bathroomCount
+        - areaSquareMeters
+        - imageUrl
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        description:
+          type: string
+        address:
+          type: string
+        price:
+          type: number
+        status:
+          type: string
+          description: Estado textual serializado de la propiedad.
+        bedroomCount:
+          type: integer
+          minimum: 0
+        bathroomCount:
+          type: integer
+          minimum: 0
+        areaSquareMeters:
+          type: number
+        imageUrl:
+          type: string
+          format: uri
+          example: http://localhost:5023/assets/properties/1.png
+    ValidationProblemDetails:
+      type: object
+      properties:
+        type:
+          type: string
+        title:
+          type: string
+        status:
+          type: integer
+          format: int32
+        detail:
+          type: string
+        instance:
+          type: string
+        errors:
+          type: object

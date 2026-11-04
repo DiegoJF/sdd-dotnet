@@ -1,9 +1,12 @@
 using RealtorWeb.Components;
+using RealtorWeb.Services.Api;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddRazorComponents();
+builder.Services.AddRazorComponents()
+    .AddInteractiveServerComponents();
+builder.Services.AddRealtorApiClients(builder.Configuration);
 
 var app = builder.Build();
 
@@ -20,6 +23,7 @@ app.UseHttpsRedirection();
 app.UseAntiforgery();
 
 app.MapStaticAssets();
-app.MapRazorComponents<App>();
+app.MapRazorComponents<App>()
+    .AddInteractiveServerRenderMode();
 
 app.Run();

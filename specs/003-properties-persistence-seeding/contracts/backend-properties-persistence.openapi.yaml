@@ -1,0 +1,79 @@
+openapi: 3.0.3
+info:
+  title: Realtor API - Contrato de Persistencia Inicial de Propiedades
+  version: 0.1.0
+  description: >-
+    Contrato de interfaz relevante para la spec 003. Documenta la sonda técnica
+    existente y la convención pública de acceso a imágenes persistidas.
+servers:
+  - url: http://localhost:5000
+paths:
+  /health:
+    get:
+      operationId: getHealth
+      summary: Estado técnico del backend
+      responses:
+        '200':
+          description: Servicio operativo
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+  /assets/properties/{fileName}:
+    get:
+      operationId: getPropertyImage
+      summary: Obtiene imagen pública de propiedad
+      description: >-
+        Ruta pública final servida por archivos estáticos (`UseStaticFiles`) y
+        que debe corresponder con el valor persistido en Property.ImageUrl.
+      parameters:
+        - name: fileName
+          in: path
+          required: true
+          description: Nombre de archivo de imagen (por ejemplo, 1.png)
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Imagen encontrada y servida desde wwwroot/assets/properties
+          content:
+            image/png:
+              schema:
+                type: string
+                format: binary
+            image/jpeg:
+              schema:
+                type: string
+                format: binary
+        '404':
+          description: Imagen no encontrada
+        '500':
+          description: Error interno
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+components:
+  schemas:
+    HealthResponse:
+      type: object
+      required:
+        - status
+      properties:
+        status:
+          type: string
+          example: ok
+    ProblemDetails:
+      type: object
+      properties:
+        type:
+          type: string
+        title:
+          type: string
+        status:
+          type: integer
+          format: int32
+        detail:
+          type: string
+        instance:
+          type: string

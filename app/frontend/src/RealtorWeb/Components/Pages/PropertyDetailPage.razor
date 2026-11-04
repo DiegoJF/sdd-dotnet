@@ -1,0 +1,13 @@
+@page "/properties/{Id}"
+@rendermode InteractiveServer
+
+@using RealtorWeb.Features.Properties.Detail
+
+<PageTitle>Detalle de propiedad</PageTitle>
+
+<PropertyDetail Id="@Id" />
+
+@code {
+    [Parameter]
+    public string Id { get; set; } = default!;
+}

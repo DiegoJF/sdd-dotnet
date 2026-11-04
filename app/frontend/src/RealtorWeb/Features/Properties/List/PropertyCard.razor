@@ -1,0 +1,45 @@
+@using System.Globalization
+
+<article class="card property-card">
+    @if (property.ImageUrl is not null)
+    {
+        <div class="property-card-media">
+            <img src="@property.ImageUrl" alt="@property.Title" class="property-card-image" />
+        </div>
+    }
+
+    <div class="card-body property-card-body">
+        <div class="property-card-topline">
+            <h2 class="property-card-title">@property.Title</h2>
+            <span class="badge property-status">@property.Status</span>
+        </div>
+
+        <div class="property-card-price">@property.Price.ToString("C0", CultureInfo.CurrentCulture)</div>
+        <p class="property-card-address">@property.Address</p>
+
+        <dl class="property-card-metrics">
+            <div>
+                <dt>Dormitorios</dt>
+                <dd>@property.BedroomCount</dd>
+            </div>
+            <div>
+                <dt>Baños</dt>
+                <dd>@property.BathroomCount</dd>
+            </div>
+            <div>
+                <dt>m²</dt>
+                <dd>@property.AreaSquareMeters.ToString("0.#", CultureInfo.CurrentCulture)</dd>
+            </div>
+        </dl>
+
+        <div class="property-card-actions">
+            <a class="btn btn-primary" href="@($"/properties/{property.Id}")">Ver</a>
+            <a class="btn btn-secondary" href="@($"/properties/{property.Id}/edit")">Editar</a>
+        </div>
+    </div>
+</article>
+
+@code {
+    [Parameter]
+    public PropertyListItem property { get; set; } = default!;
+}

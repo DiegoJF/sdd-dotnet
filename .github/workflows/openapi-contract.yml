@@ -1,0 +1,56 @@
+name: OpenAPI Contract
+
+on:
+  # Validar contratos en cambios propuestos hacia main.
+  pull_request:
+    branches:
+      - main
+  # Revalidar contratos en cambios ya integrados en main.
+  push:
+    branches:
+      - main
+  # Permitir ejecución manual para verificaciones ad-hoc.
+  workflow_dispatch:
+
+jobs:
+  validate-openapi-contract:
+    name: Validate OpenAPI v1 contract
+    runs-on: ubuntu-latest
+
+    steps:
+      # Obtener el código del repositorio.
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Instalar exactamente el SDK definido por global.json.
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      # Instalar Node LTS para ejecutar Redocly via npx.
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      # Restaurar herramientas locales (incluye NSwag).
+      - name: Restore .NET tools
+        run: dotnet tool restore
+
+      # Regenerar y validar OpenAPI (build + Redocly + smoke NSwag).
+      - name: Generate and validate OpenAPI v1
+        run: pwsh support/scripts/generate-openapi-v1.ps1
+
+      # Ejecutar pruebas, incluyendo OpenApiDriftTests.
+      - name: Run test suite
+        run: dotnet test app/Realtor.sln
+
+      # Fallar si v1.json cambia y no está versionado en el commit/PR.
+      - name: Verify no OpenAPI drift
+        shell: bash
+        run: |
+          git diff --exit-code -- app/backend/src/RealtorApi/wwwroot/openapi/v1.json || {
+            echo "OpenAPI drift detectado: actualiza y versiona app/backend/src/RealtorApi/wwwroot/openapi/v1.json";
+            exit 1;
+          }

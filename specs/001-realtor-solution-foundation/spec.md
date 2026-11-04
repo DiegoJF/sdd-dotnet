@@ -2,13 +2,13 @@
 
 **Rama de la funcionalidad**: `001-realtor-solution-foundation`
 
-**Creado**: 2026-11-03
+**Creado**: 2026-07-07
 
 **Estado**: Borrador
 
-**Entrada**: Descripción de usuario: "Crear la especificación de fundación de la solución Realtor. La solución incluye backend ASP.NET Core Minimal APIs, frontend Blazor Web App con Razor Components y proyectos de pruebas; sin lógica de negocio, features ni entidades de dominio. La versión de .NET se deriva de global.json, que no debe modificarse."
+**Entrada**: Descripción de usuario: "Crear base de la solución Realtor para la iniciativa 001, sin lógica de negocio ni features"
 
-## Escenarios de Usuario y Pruebas _(obligatorio)_
+## Escenarios de Usuario y Pruebas *(obligatorio)*
 
 ### Historia de Usuario 1 - Crear la base única de solución (Prioridad: P1)
 
@@ -22,8 +22,6 @@ Como equipo de desarrollo, necesitamos una solución única con backend y fronte
 
 1. **Dado** un repositorio con `global.json` en la raíz, **cuando** se prepara la iniciativa foundation, **entonces** existe una solución principal en `app/Realtor.sln`.
 2. **Dado** la solución principal creada, **cuando** se revisa su composición, **entonces** incluye un proyecto de backend, un proyecto de frontend y sus respectivos proyectos de pruebas en las rutas esperadas.
-3. **Dado** el proyecto de backend, **cuando** se revisa su arquitectura de endpoints, **entonces** usa ASP.NET Core Minimal APIs y no contiene controllers.
-4. **Dado** el proyecto frontend, **cuando** se revisa su estructura de interfaz, **entonces** usa Blazor Web App con Razor Components.
 
 ---
 
@@ -39,7 +37,6 @@ Como responsable técnico, necesito que la configuración inicial de arranque es
 
 1. **Dado** el proyecto backend base, **cuando** se inspecciona su arranque, **entonces** solo contiene configuración mínima de plataforma.
 2. **Dado** la iniciativa foundation, **cuando** se revisa el código inicial, **entonces** no existen implementaciones de lógica de negocio, features de producto ni entidades de dominio.
-3. **Dado** el archivo de arranque del backend, **cuando** se inspecciona su contenido, **entonces** se limita a configurar servicios, middleware y el mapeo inicial de endpoints.
 
 ---
 
@@ -60,7 +57,7 @@ Como equipo de producto y arquitectura, necesitamos que la base fundacional qued
 - ¿Qué ocurre si falta `global.json` en la raíz? El proceso de esta iniciativa se bloquea y no se generan artefactos nuevos hasta corregirlo.
 - ¿Qué ocurre si ya existe parcial o totalmente la estructura de carpetas/proyectos esperada? Debe evitarse sobreescritura destructiva y conservarse la consistencia de nombres/rutas.
 
-## Requisitos _(obligatorio)_
+## Requisitos *(obligatorio)*
 
 ### Requisitos funcionales
 
@@ -74,9 +71,6 @@ Como equipo de producto y arquitectura, necesitamos que la base fundacional qued
 - **RF-008**: La iniciativa foundation NO DEBE introducir features funcionales de producto.
 - **RF-009**: La iniciativa foundation NO DEBE crear entidades de dominio.
 - **RF-010**: La versión de plataforma utilizada en esta iniciativa DEBE derivarse del archivo `global.json` existente en la raíz del repositorio, sin modificar dicho archivo.
-- **RF-011**: El backend DEBE usar ASP.NET Core Minimal APIs y NO DEBE incluir controllers.
-- **RF-012**: El frontend DEBE usar Blazor Web App con Razor Components.
-- **RF-013**: El archivo `Program.cs` del backend DEBE limitarse a configurar servicios, middleware y el mapeo inicial de endpoints.
 
 ### Entidades clave
 
@@ -85,7 +79,7 @@ Como equipo de producto y arquitectura, necesitamos que la base fundacional qued
 - **Proyecto de Pruebas Base**: Unidad de pruebas preparada para validar evolución futura de cada capa.
 - **Baseline de Versión**: Restricción de versión de plataforma declarada en `global.json` y aplicada a iniciativas .NET futuras.
 
-## Criterios de Éxito _(obligatorio)_
+## Criterios de Éxito *(obligatorio)*
 
 ### Resultados medibles
 
@@ -93,12 +87,10 @@ Como equipo de producto y arquitectura, necesitamos que la base fundacional qued
 - **CE-002**: La solución base compila sin errores de construcción en al menos 1 ejecución completa de verificación.
 - **CE-003**: El 100% del código inicial de backend permanece dentro de configuración base de arranque, sin lógica de negocio ni entidades de dominio.
 - **CE-004**: El equipo puede iniciar la siguiente iniciativa sin crear una segunda solución ni reestructurar carpetas fundacionales.
-- **CE-005**: La revisión de la solución confirma que el backend no contiene controllers y que el frontend está basado en Blazor Web App con Razor Components.
 
 ## Suposiciones
 
 - Existe y se mantiene `global.json` como fuente de verdad para la versión de .NET del repositorio.
-- El SDK definido actualmente en `global.json` es `11.0.100-preview.5.26302.115`; esta iniciativa no cambia ese archivo.
 - Esta iniciativa se limita a fundación estructural; los comportamientos de negocio se implementarán en iniciativas posteriores.
 - Las rutas objetivo indicadas en la iniciativa son canónicas para esta solución y deben mantenerse estables.
 - Las pruebas iniciales en proyectos de test pueden comenzar como esqueleto mínimo y crecer por iniciativas futuras.

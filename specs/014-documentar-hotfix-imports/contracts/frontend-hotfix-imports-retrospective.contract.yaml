@@ -1,0 +1,56 @@
+contract: frontend-hotfix-imports-retrospective
+version: 1.0.0
+feature: specs/014-documentar-hotfix-imports
+status: draft
+scope:
+  type: retrospective
+  layer: frontend
+  primary_change: app/frontend/src/RealtorWeb/Features/_Imports.razor
+problem_statement:
+  summary: >-
+    Las vistas del modulo Features presentaban inestabilidad por ausencia de un
+    contexto de imports compartidos consistente.
+expected_behavior:
+  - id: EB-001
+    description: >-
+      Las vistas de listado y detalle de propiedades deben renderizar de forma
+      consistente dentro de los recorridos principales.
+  - id: EB-002
+    description: >-
+      Los estados de carga, vacio, error y contenido deben mantenerse
+      comprensibles para el usuario final.
+  - id: EB-003
+    description: >-
+      La validacion tecnica minima del frontend debe mantenerse en verde
+      mediante compilacion y pruebas disponibles.
+acceptance_criteria:
+  - id: AC-001
+    given: Existe una sesion de navegacion en el frontend
+    when: Se accede a vistas de propiedades en el modulo Features
+    then: No se observan rupturas de renderizado atribuibles al alcance del hotfix
+  - id: AC-002
+    given: Se ejecuta la validacion tecnica del estado actual
+    when: Se corre build y pruebas relacionadas
+    then: Los comandos finalizan con resultado exitoso
+evidence:
+  tests:
+    - command: dotnet test app/frontend/test/RealtorWeb/RealtorWebTests.csproj -v minimal
+      result: success
+      notes: 1 passed, 0 failed
+  build:
+    - command: dotnet build app/frontend/src/RealtorWeb/RealtorWeb.csproj -v minimal
+      result: success
+risks:
+  - id: R-001
+    category: cobertura
+    description: La prueba automatizada disponible es una smoke test de bajo alcance.
+  - id: R-002
+    category: mantenibilidad
+    description: Imports transversales pueden ocultar dependencias explicitas por componente.
+  - id: R-003
+    category: dependencias
+    description: Advertencia NU1902 detectada en dependencia de test.
+out_of_scope:
+  - Redisenar arquitectura de componentes.
+  - Modificar backend, contratos API o persistencia.
+  - Introducir nuevas funcionalidades.

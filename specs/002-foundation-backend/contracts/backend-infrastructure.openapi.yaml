@@ -1,0 +1,97 @@
+openapi: 3.1.0
+info:
+  title: Realtor Backend Infrastructure API
+  version: 0.2.0
+  description: >-
+    Contrato HTTP de infraestructura para la iniciativa 002. Incluye únicamente
+    la sonda técnica /health y esquemas base de errores para capacidades
+    transversales.
+servers:
+  - url: http://localhost:5000
+    description: Desarrollo local
+paths:
+  /health:
+    get:
+      summary: Obtener estado de salud de infraestructura
+      description: >-
+        Endpoint de sonda técnica migrado al patrón ISlice. No requiere
+        autenticación de aplicación y debe publicarse solo para origen interno
+        mediante ingress/reverse proxy.
+      operationId: getHealth
+      tags:
+        - Infraestructura
+      responses:
+        "200":
+          description: Aplicación saludable
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthResponse"
+              examples:
+                healthy:
+                  value:
+                    status: ok
+        "503":
+          description: Aplicación no saludable
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+              examples:
+                unavailable:
+                  value:
+                    title: Servicio no disponible
+                    status: 503
+                    detail: La sonda reporta estado no saludable
+components:
+  schemas:
+    HealthResponse:
+      type: object
+      additionalProperties: false
+      required:
+        - status
+      properties:
+        status:
+          type: string
+          description: Estado de salud simplificado
+          examples:
+            - ok
+    ProblemDetails:
+      type: object
+      additionalProperties: true
+      required:
+        - title
+        - status
+      properties:
+        type:
+          type: string
+          nullable: true
+        title:
+          type: string
+        status:
+          type: integer
+          minimum: 100
+          maximum: 599
+        detail:
+          type: string
+          nullable: true
+        instance:
+          type: string
+          nullable: true
+    ValidationProblemDetails:
+      allOf:
+        - $ref: "#/components/schemas/ProblemDetails"
+        - type: object
+          required:
+            - errors
+          properties:
+            errors:
+              type: object
+              additionalProperties:
+                type: array
+                items:
+                  type: string
+x-realtor-infrastructure-policies:
+  healthEndpoint:
+    appAuthRequired: false
+    exposure: internal-only-via-ingress-or-reverse-proxy

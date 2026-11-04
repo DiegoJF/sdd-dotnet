@@ -1,0 +1,13 @@
+@page "/properties/{Id}/edit"
+@rendermode InteractiveServer
+
+@using RealtorWeb.Features.Properties.Update
+
+<PageTitle>Editar propiedad</PageTitle>
+
+<PropertyUpdateForm Id="@Id" />
+
+@code {
+    [Parameter]
+    public string Id { get; set; } = default!;
+}

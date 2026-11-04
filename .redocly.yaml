@@ -1,0 +1,12 @@
+apis:
+  realtor-v1:
+    root: ./app/backend/src/RealtorApi/wwwroot/openapi/v1.json
+
+extends:
+  - recommended
+
+rules:
+  security-defined: off
+  operation-4xx-response: warn
+  no-empty-servers: off
+  operation-summary: off

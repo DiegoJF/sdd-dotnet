@@ -1,0 +1,52 @@
+name: frontend-interactive-server-render-mode
+version: 1.0.0
+feature: 013-signalr-interactive-server
+summary: Contrato funcional para habilitación granular de InteractiveServer en páginas host de RealtorWeb.
+
+scope:
+  included:
+    - app/frontend/src/RealtorWeb/Components/Pages/Home.razor
+    - app/frontend/src/RealtorWeb/Components/Pages/PropertyDetailPage.razor
+  excluded:
+    - app/frontend/src/RealtorWeb/Components/Pages/Error.razor
+    - app/frontend/src/RealtorWeb/Components/Pages/NotFound.razor
+    - app/frontend/src/RealtorWeb/Components/App.razor
+    - app/frontend/src/RealtorWeb/Components/Routes.razor
+
+render_mode_rules:
+  - page: Home.razor
+    route: /
+    expectedRenderMode: InteractiveServer
+    rationale: Aloja PropertyList con acciones Anterior/Siguiente/Reintentar.
+  - page: PropertyDetailPage.razor
+    route: /properties/{Id}
+    expectedRenderMode: InteractiveServer
+    rationale: Aloja PropertyDetail con acciones Volver al listado/Reintentar.
+  - page: Error.razor
+    route: /Error
+    expectedRenderMode: StaticSSR
+    rationale: Página informativa explícitamente fuera de alcance interactivo.
+  - page: NotFound.razor
+    route: /not-found
+    expectedRenderMode: StaticSSR
+    rationale: Página informativa explícitamente fuera de alcance interactivo.
+
+behavioral_acceptance:
+  - id: AC-001
+    rule: Siguiente navega a la siguiente página del listado sin recarga completa del navegador.
+  - id: AC-002
+    rule: Anterior navega a la página previa del listado sin recarga completa del navegador.
+  - id: AC-003
+    rule: Anterior/Siguiente respetan su estado disabled según CanGoPrevious/CanGoNext.
+  - id: AC-004
+    rule: Volver al listado navega a / desde detalle en estados success, notFound y error.
+  - id: AC-005
+    rule: Reintentar en listado y detalle vuelve a ejecutar carga de datos.
+
+non_regression:
+  - id: NR-001
+    rule: No cambiar backend ni endpoints API.
+  - id: NR-002
+    rule: No modificar contratos Refit existentes.
+  - id: NR-003
+    rule: No alterar lógica funcional de code-behind fuera de render mode en páginas host.
